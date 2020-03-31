@@ -11,7 +11,8 @@ enum buttons
   btnNONE
 };
 
-int lastButton = 0;
+int lastButton = btnNONE;
+
 int read_LCD_buttons()
 {
   int adc_key_in = analogRead(buttonsPin);
@@ -30,19 +31,6 @@ void holdUntilEscape()
   while (buttonState != btnLEFT) {
       buttonState = read_LCD_buttons();
   }
-}
-
-void clearSecondLcdRow(){
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print("               ");
-  mainMenu->getLCD()->setCursor(0,1);
-}
-
-void displaySaved()
-{
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("Saved:");
 }
 
 #endif

@@ -15,10 +15,10 @@
 #define lcdBrightPin  10
 //SPI: 11 - 12 - 13
 #define buttonsPin    A0
-#define analogInput1  A1
-#define analogInput2  A2
+#define decomposerPin A1
+#define humidifierPin A2
 #define generatorPin  A3
-#define decomposerPin A4
-#define humidifierPin A5
+#define analogInput1  A4
+#define analogInput2  A5
 
 #endif

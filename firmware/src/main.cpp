@@ -15,6 +15,7 @@ Timer   timer;
 #include "version.h"
 #include "pinMap.h"
 #include "buttonUtils.h"
+#include "displayUtils.h"
 #include "timerAction.h"
 #include "fwInfoAction.h"
 #include "brightnessAction.h"
@@ -65,7 +66,12 @@ void setup()
   lcdBrightness = config.brightness();
   pinMode(lcdBrightPin, OUTPUT);
   analogWrite(lcdBrightPin, lcdBrightness);
-  mainMenu->display();
+
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print("Open Ozone");
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print("Project");
 }
 
 void loop()
@@ -83,6 +89,7 @@ void loop()
       mainMenu->getLCD()->print(mainMenu->prev()->getName());
       break;
     case btnRIGHT :
+      delay(100);
       mainMenu->selectOption();
     break;
     case btnTIMER :
