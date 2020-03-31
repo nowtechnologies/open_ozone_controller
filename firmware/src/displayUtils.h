@@ -14,4 +14,13 @@ void displaySaved()
   mainMenu->getLCD()->print("Saved:");
 }
 
+void displaySplash(){
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print("Open Ozone");
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print("Controller");
+  delay(2000);
+}
+
 #endif

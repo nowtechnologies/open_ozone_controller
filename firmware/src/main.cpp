@@ -21,57 +21,29 @@ Timer   timer;
 #include "brightnessAction.h"
 #include "generatorAction.h"
 #include "processAction.h"
+#include "mainMenu.h"
 
-void nada(){}
+bool ozoneSensorPresent    = false;
+bool humiditySensorPresent = false;
 
-void setup()
-{
+void initPeripherals(){
   pinMode(fanEnablePin, OUTPUT);  digitalWrite(fanEnablePin, LOW);
   pinMode(safeSignPin, OUTPUT);   digitalWrite(safeSignPin, LOW);
   pinMode(generatorPin, OUTPUT);  digitalWrite(generatorPin, LOW);
   pinMode(decomposerPin, OUTPUT); digitalWrite(decomposerPin, LOW);
   pinMode(humidifierPin, OUTPUT); digitalWrite(humidifierPin, LOW);
-
+  pinMode(lcdBrightPin, OUTPUT);
+  lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
   LCD->begin(16,2);
   LCD->clear();
-
-  mainMenu     = new LCDMenu("Main Menu", LCD);
-  LCDMenuItem *newItem;
-
-  newItem = new LCDMenuItem("Start");
-  newItem->setAction(&processAction);
-  mainMenu->addMenuItem(newItem);
-
-  newItem = new LCDMenuItem("Measure");
-  newItem->setAction(&nada);
-  mainMenu->addMenuItem(newItem);
-
-  newItem = new LCDMenuItem("Set generator");
-  newItem->setAction(&generatorAction);
-  mainMenu->addMenuItem(newItem);
-
-  newItem = new LCDMenuItem("Set timer");
-  newItem->setAction(&timerAction);
-  mainMenu->addMenuItem(newItem);
-
-  newItem = new LCDMenuItem("Set brightness");
-  newItem->setAction(&brightnessAction);
-  mainMenu->addMenuItem(newItem);
-
-  newItem = new LCDMenuItem("Firmware info");
-  newItem->setAction(&firmwareInfoAction);
-  mainMenu->addMenuItem(newItem);
-
-  lcdBrightness = config.brightness();
-  pinMode(lcdBrightPin, OUTPUT);
   analogWrite(lcdBrightPin, lcdBrightness);
+}
 
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("Open Ozone");
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print("Project");
+void setup()
+{
+  initPeripherals();
+  initMainMenu();
 }
 
 void loop()
