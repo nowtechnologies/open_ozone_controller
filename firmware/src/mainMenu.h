@@ -11,8 +11,12 @@ void initMainMenu(){
   newItem->setAction(&processAction);
   mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Measure");
+  newItem = new LCDMenuItem("Ozone level");
   newItem->setAction(&nada);
+  mainMenu->addMenuItem(newItem);
+
+  newItem = new LCDMenuItem("Humidity level");
+  newItem->setAction(&humidityAction);
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Set generator");
@@ -31,7 +35,7 @@ void initMainMenu(){
   newItem->setAction(&firmwareInfoAction);
   mainMenu->addMenuItem(newItem);
 
-  displaySplash();
+  displayPOST();
   mainMenu->display();
 }
 
