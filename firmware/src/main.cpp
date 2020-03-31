@@ -1,20 +1,44 @@
 #include <Arduino.h>
-#include <EEPROM.h>
 #include <LiquidCrystal.h>
 #include <LCDMenu.h>
 #include <LCDMenuItem.h>
 #include <Storage.h>
 
-#define btnRIGHT  0
-#define btnUP     1
-#define btnDOWN   2
-#define btnLEFT   3
-#define btnTIMER  4
-#define btnNONE   5
-#define lcdBrightPin 10
+// hardcoded version
 #define fw_major  0
 #define fw_minor  1
 #define fw_fix    2
+
+// pinmap
+#define fanEnablePin  0
+#define safeSignPin   1 // also lock disable
+#define chipSelect1   2
+#define chipSelect2   3
+#define lcdData4Pin   4
+#define lcdData5Pin   5
+#define lcdData6Pin   6
+#define lcdData7Pin   7
+#define lcdResetPin   8
+#define lcdEnablePin  9
+#define lcdBrightPin  10
+//SPI: 11 - 12 - 13
+#define buttonsPin    A0
+// A1 not used
+#define generatorPin  A3
+#define decomposerPin A4
+#define humidifierPin A5
+
+bool generatorEnabled = false;
+
+enum buttons
+{
+  btnRIGHT,
+  btnUP,
+  btnDOWN,
+  btnLEFT,
+  btnTIMER,
+  btnNONE
+};
 
 LiquidCrystal* LCD;
 LCDMenu* mainMenu;
@@ -25,13 +49,13 @@ int lcdBrightness = 255;
 
 int read_LCD_buttons()
 {
-  int adc_key_in = analogRead(0);
+  int adc_key_in = analogRead(buttonsPin);
   if (adc_key_in > 1000) return btnNONE;
-  if (adc_key_in < 50)   return btnRIGHT;
-  if (adc_key_in < 195)  return btnUP;
-  if (adc_key_in < 380)  return btnDOWN;
-  if (adc_key_in < 555)  return btnLEFT;
-  if (adc_key_in < 790)  return btnTIMER;
+  if (adc_key_in < 50)   { delay(100); return btnRIGHT;}
+  if (adc_key_in < 195)  { delay(100); return btnUP;}
+  if (adc_key_in < 380)  { delay(100); return btnDOWN;}
+  if (adc_key_in < 555)  { delay(100); return btnLEFT;}
+  if (adc_key_in < 790)  { delay(100); return btnTIMER;}
   return btnNONE;
 }
 
@@ -43,6 +67,12 @@ void holdUntilEscape()
   while (buttonState != btnLEFT) {
       buttonState = read_LCD_buttons();
   }
+}
+
+void clearSecondLcdRow(){
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print("               ");
+  mainMenu->getLCD()->setCursor(0,1);
 }
 
 void displaySaved()
@@ -68,7 +98,6 @@ void firmwareInfoAction()
   mainMenu->getLCD()->setCursor(0,0);
   mainMenu->getLCD()->print("Firmware version:");
   mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print("v");
   mainMenu->getLCD()->print(fw_major);
   mainMenu->getLCD()->print(".");
   mainMenu->getLCD()->print(fw_minor);
@@ -106,18 +135,86 @@ void brightnessAction()
           break;
         }
         lastButton = buttonState;
-        mainMenu->getLCD()->setCursor(0,1);
-        mainMenu->getLCD()->print("    ");
-        mainMenu->getLCD()->setCursor(0,1);
+        clearSecondLcdRow();
         mainMenu->getLCD()->print(lcdBrightness);
         analogWrite(lcdBrightPin, lcdBrightness);
       }
   }
 }
 
+void generatorAction()
+{
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print("Ozone generator");
+  delay(500);
+  int buttonState = btnNONE;
+  while (buttonState != btnLEFT) {
+      buttonState = read_LCD_buttons();
+      if (buttonState != lastButton)
+      {
+        switch (buttonState)
+        {
+        case btnDOWN :
+            generatorEnabled = false;
+          break;
+        case btnUP :
+            generatorEnabled = true;
+          break;
+        }
+        lastButton = buttonState;
+        clearSecondLcdRow();
+        mainMenu->getLCD()->print(generatorEnabled?"ON":"OFF");
+        digitalWrite(generatorPin, generatorEnabled);
+      }
+  }
+}
+
+void timerAction(){
+  int buttonState = btnNONE;
+  uint16_t timerSeconds = 10;
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print("Start timer: ");
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print(timerSeconds);
+  mainMenu->getLCD()->print(" sec");
+  while (buttonState != btnLEFT) {
+      buttonState = read_LCD_buttons();
+      if (buttonState != lastButton)
+      {
+        switch (buttonState)
+        {
+        case btnDOWN :
+            timerSeconds--;
+            if (timerSeconds < 1) timerSeconds = 1;
+        break;
+        case btnUP :
+            timerSeconds++;
+            if (timerSeconds > 65535) timerSeconds = 65535;
+        break;
+        case btnRIGHT :
+            //start timer
+        break;
+        }
+        lastButton = buttonState;
+        clearSecondLcdRow();
+        mainMenu->getLCD()->print(timerSeconds);
+        mainMenu->getLCD()->print(" sec");
+        digitalWrite(generatorPin, generatorEnabled);
+      }
+  }
+}
+
 void setup()
 {
-  LCD = new LiquidCrystal(8, 9, 4, 5, 6, 7);
+  pinMode(fanEnablePin, OUTPUT);  digitalWrite(fanEnablePin, LOW);
+  pinMode(safeSignPin, OUTPUT);   digitalWrite(safeSignPin, LOW);
+  pinMode(generatorPin, OUTPUT);  digitalWrite(generatorPin, LOW);
+  pinMode(decomposerPin, OUTPUT); digitalWrite(decomposerPin, LOW);
+  pinMode(humidifierPin, OUTPUT); digitalWrite(humidifierPin, LOW);
+
+  LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
   LCD->begin(16,2);
   LCD->clear();
 
@@ -133,11 +230,11 @@ void setup()
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Set generator");
-  newItem->setAction(&nada);
+  newItem->setAction(&generatorAction);
   mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Set chamber");
-  newItem->setAction(&nada);
+  newItem = new LCDMenuItem("Set timer");
+  newItem->setAction(&timerAction);
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Set brightness");
@@ -171,6 +268,9 @@ void loop()
       break;
     case btnRIGHT :
       mainMenu->selectOption();
+    break;
+    case btnTIMER :
+      timerAction();
       break;
     }
     mainMenu->display();
