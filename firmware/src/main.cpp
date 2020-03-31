@@ -3,6 +3,7 @@
 #include <LCDMenu.h>
 #include <LCDMenuItem.h>
 #include <Storage.h>
+#include <Timer.h>
 
 // hardcoded version
 #define fw_major  0
@@ -43,6 +44,7 @@ enum buttons
 LiquidCrystal* LCD;
 LCDMenu* mainMenu;
 Storage config;
+Timer   timer;
 
 int lastButton = 0;
 int lcdBrightness = 255;
@@ -170,9 +172,12 @@ void generatorAction()
   }
 }
 
+uint32_t lastTime = 0;
+
 void timerAction(){
   int buttonState = btnNONE;
   uint16_t timerSeconds = 10;
+  boolean timerStarted = false;
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
   mainMenu->getLCD()->print("Start timer: ");
@@ -180,36 +185,59 @@ void timerAction(){
   mainMenu->getLCD()->print(timerSeconds);
   mainMenu->getLCD()->print(" sec");
   while (buttonState != btnLEFT) {
+
       buttonState = read_LCD_buttons();
-      if (buttonState != lastButton)
+      if (buttonState != lastButton && !timerStarted)
       {
         switch (buttonState)
         {
         case btnDOWN :
             timerSeconds--;
-            if (timerSeconds < 1) timerSeconds = 1;
+            if (timerSeconds < 0) timerSeconds = 0;
         break;
         case btnUP :
             timerSeconds++;
             if (timerSeconds > 65535) timerSeconds = 65535;
         break;
         case btnRIGHT :
-            //start timer
+            timer.set(timerSeconds*1000);
+            timerStarted = true;
+            mainMenu->getLCD()->clear();
+            mainMenu->getLCD()->setCursor(0,0);
+            mainMenu->getLCD()->print("Time left: ");
+            digitalWrite(generatorPin, HIGH);
         break;
         }
         lastButton = buttonState;
         clearSecondLcdRow();
         mainMenu->getLCD()->print(timerSeconds);
         mainMenu->getLCD()->print(" sec");
-        digitalWrite(generatorPin, generatorEnabled);
       }
+
+      if (timerStarted)
+      {
+        uint32_t remaining = round(timer.TimeRemaining()/1000);
+        if (!timer.poll() && lastTime != remaining)
+        {
+          clearSecondLcdRow();
+          mainMenu->getLCD()->print(remaining);
+          mainMenu->getLCD()->print(" sec");
+          lastTime = remaining;
+        }
+        if (timer.poll()) {
+          digitalWrite(generatorPin, LOW);
+        }
+      }
+
   }
+  digitalWrite(generatorPin, LOW);
 }
 
 void setup()
 {
-  pinMode(fanEnablePin, OUTPUT);  digitalWrite(fanEnablePin, LOW);
-  pinMode(safeSignPin, OUTPUT);   digitalWrite(safeSignPin, LOW);
+  Serial.begin(9600);
+  // pinMode(fanEnablePin, OUTPUT);  digitalWrite(fanEnablePin, LOW);
+  // pinMode(safeSignPin, OUTPUT);   digitalWrite(safeSignPin, LOW);
   pinMode(generatorPin, OUTPUT);  digitalWrite(generatorPin, LOW);
   pinMode(decomposerPin, OUTPUT); digitalWrite(decomposerPin, LOW);
   pinMode(humidifierPin, OUTPUT); digitalWrite(humidifierPin, LOW);
