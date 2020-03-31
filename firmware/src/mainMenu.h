@@ -19,12 +19,12 @@ void initMainMenu(){
   newItem->setAction(&humidityAction);
   mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Set generator");
-  newItem->setAction(&generatorAction);
-  mainMenu->addMenuItem(newItem);
-
   newItem = new LCDMenuItem("Set timer");
   newItem->setAction(&timerAction);
+  mainMenu->addMenuItem(newItem);
+
+  newItem = new LCDMenuItem("Set generator");
+  newItem->setAction(&generatorAction);
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Set brightness");

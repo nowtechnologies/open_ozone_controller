@@ -9,11 +9,11 @@ void humidityAction()
     mainMenu->getLCD()->print(humiditySensor.Humidity);
     mainMenu->getLCD()->print("/");
     mainMenu->getLCD()->print(humiditySensor.cTemp);
-    holdUntilEscape();
   }
   else {
     mainMenu->getLCD()->clear();
     mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print("No sensor.");    
+    mainMenu->getLCD()->print("No sensor.");
   }
+  holdUntilEscape();
 }
