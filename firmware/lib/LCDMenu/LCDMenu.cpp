@@ -1,4 +1,5 @@
 #include <LiquidCrystal.h>
+#include <Arduino.h>
 #include "LCDMenu.h"
 
 LCDMenu::LCDMenu(String newName, LiquidCrystal* newLCD, LCDMenu* parentMenu)
