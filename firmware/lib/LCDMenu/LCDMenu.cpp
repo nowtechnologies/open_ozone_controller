@@ -1,12 +1,13 @@
 #include <LiquidCrystal.h>
 #include "LCDMenu.h"
 
-LCDMenu::LCDMenu(String newName, LiquidCrystal* newLCD)
+LCDMenu::LCDMenu(String newName, LiquidCrystal* newLCD, LCDMenu* parentMenu)
 {
   setName(newName);
   setLCD(newLCD);
   menuFirst = NULL;
   menuLast = NULL;
+  parent = parentMenu;
 }
 
 void LCDMenu::setName(String newName)
@@ -78,4 +79,12 @@ void LCDMenu::display()
 		Serial.println(menuCurrent->getNext()->getName());
 #endif
 	}
+}
+
+bool LCDMenu::hasParentMenu() {
+	return (parent != NULL);
+}
+
+LCDMenu* LCDMenu::getParentMenu() {
+	return parent;
 }

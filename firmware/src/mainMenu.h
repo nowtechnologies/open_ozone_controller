@@ -7,8 +7,10 @@ void nada() {
 #endif
 }
 
-void initMainMenu(){
-  mainMenu     = new LCDMenu("Main Menu", LCD);
+void initMenus(){
+	
+  // Main menu
+  mainMenu = new LCDMenu("Main Menu", LCD);
   LCDMenuItem *newItem;
 
   newItem = new LCDMenuItem("Start");
@@ -31,16 +33,26 @@ void initMainMenu(){
   newItem->setAction(&generatorAction);
   mainMenu->addMenuItem(newItem);
 
+  newItem = new LCDMenuItem("Settings");
+  newItem->setAction(&settingsAction);
+  mainMenu->addMenuItem(newItem);
+  
+  // Settings Menu, whose parent menu is mainMenu 
+  settingsMenu = new LCDMenu("Settings Menu", LCD, mainMenu);
+  
   newItem = new LCDMenuItem("Set brightness");
   newItem->setAction(&brightnessAction);
-  mainMenu->addMenuItem(newItem);
-
+  settingsMenu->addMenuItem(newItem);
+  
   newItem = new LCDMenuItem("Firmware info");
   newItem->setAction(&firmwareInfoAction);
-  mainMenu->addMenuItem(newItem);
+  settingsMenu->addMenuItem(newItem);
+  
+  // Set the mainMenu as active
+  activeMenu = mainMenu;
 
   displayPOST();
-  mainMenu->display();
+  activeMenu->display();
 }
 
 #endif
