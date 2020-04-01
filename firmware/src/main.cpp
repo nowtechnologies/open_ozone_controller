@@ -93,7 +93,7 @@ void loop()
       timerAction();
       break;
     }
-    mainMenu->display();
+    if (buttonState != btnNONE) mainMenu->display();
     lastButton = buttonState;
   }
 }

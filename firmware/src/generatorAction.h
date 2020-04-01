@@ -27,6 +27,10 @@ void generatorAction()
         clearSecondLcdRow();
         mainMenu->getLCD()->print(generatorEnabled?"ON":"OFF");
         digitalWrite(generatorPin, generatorEnabled);
+#ifdef DEBUG
+		Serial.println("Ozone generator");
+		Serial.println(generatorEnabled);
+#endif
       }
   }
 }

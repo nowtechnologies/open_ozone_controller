@@ -34,6 +34,10 @@ void brightnessAction()
         lastButton = buttonState;
         clearSecondLcdRow();
         mainMenu->getLCD()->print(lcdBrightness);
+#ifdef DEBUG
+	    Serial.println("LCD brightness:");
+	    Serial.println(lcdBrightness);
+#endif
         analogWrite(lcdBrightPin, lcdBrightness);
       }
   }
