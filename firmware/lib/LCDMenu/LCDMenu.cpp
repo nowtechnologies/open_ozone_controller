@@ -1,12 +1,14 @@
 #include <LiquidCrystal.h>
+#include <Arduino.h>
 #include "LCDMenu.h"
 
-LCDMenu::LCDMenu(String newName, LiquidCrystal* newLCD)
+LCDMenu::LCDMenu(String newName, LiquidCrystal* newLCD, LCDMenu* parentMenu)
 {
   setName(newName);
   setLCD(newLCD);
   menuFirst = NULL;
   menuLast = NULL;
+  parent = parentMenu;
 }
 
 void LCDMenu::setName(String newName)
@@ -66,9 +68,24 @@ void LCDMenu::display()
 	LCD->clear();
 	LCD->setCursor(0,0);
 	LCD->print(">" + menuCurrent->getName());
+#ifdef DEBUG
+	Serial.println("");
+	Serial.print(">"); Serial.println(menuCurrent->getName());
+#endif
 	if (menuCurrent->getNext() != menuCurrent)
 	{
 		LCD->setCursor(1,1);
 		LCD->print(menuCurrent->getNext()->getName());
+#ifdef DEBUG
+		Serial.println(menuCurrent->getNext()->getName());
+#endif
 	}
+}
+
+bool LCDMenu::hasParentMenu() {
+	return (parent != NULL);
+}
+
+LCDMenu* LCDMenu::getParentMenu() {
+	return parent;
 }

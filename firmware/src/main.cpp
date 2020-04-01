@@ -15,7 +15,9 @@ bool ozoneSensorPresent    = false;
 bool humiditySensorPresent = false;
 AM2320 humiditySensor(&Wire);
 LiquidCrystal* LCD;
+LCDMenu* activeMenu;
 LCDMenu* mainMenu;
+LCDMenu* settingsMenu;
 Storage config;
 Timer   timer;
 
@@ -30,6 +32,7 @@ Timer   timer;
 #include "brightnessAction.h"
 #include "generatorAction.h"
 #include "processAction.h"
+#include "settingsAction.h"
 #include "mainMenu.h"
 
 void initPeripherals(){
@@ -37,7 +40,8 @@ void initPeripherals(){
 // ports
 #ifdef DEBUG
   Serial.begin(9600);
-#elseif
+  Serial.println("Debug mode is ON");
+#else
   pinMode(fanEnablePin, OUTPUT);  digitalWrite(fanEnablePin, LOW);
   pinMode(safeSignPin, OUTPUT);   digitalWrite(safeSignPin, LOW);
 #endif
@@ -67,7 +71,7 @@ void initPeripherals(){
 void setup()
 {
   initPeripherals();
-  initMainMenu();
+  initMenus();
 }
 
 void loop()
@@ -75,24 +79,32 @@ void loop()
   int buttonState = read_LCD_buttons();
   if (buttonState != lastButton)
   {
-    mainMenu->getLCD()->setCursor(0,0);
+    activeMenu->getLCD()->setCursor(0,0);
     switch (buttonState)
     {
     case btnDOWN :
-      mainMenu->getLCD()->print(mainMenu->next()->getName());
+      activeMenu->getLCD()->print(activeMenu->next()->getName());
       break;
     case btnUP :
-      mainMenu->getLCD()->print(mainMenu->prev()->getName());
+      activeMenu->getLCD()->print(activeMenu->prev()->getName());
       break;
     case btnRIGHT :
       delay(100);
-      mainMenu->selectOption();
-    break;
+      activeMenu->selectOption();
+	  break;
+	case btnLEFT :
+	  if (activeMenu->hasParentMenu()) {
+#ifdef DEBUG
+	      Serial.println("Setting parentMenu as activeMenu");
+#endif
+		  activeMenu = activeMenu->getParentMenu();
+	  }
+	  break;
     case btnTIMER :
       timerAction();
       break;
     }
-    mainMenu->display();
+    if (buttonState != btnNONE) activeMenu->display();
     lastButton = buttonState;
   }
 }

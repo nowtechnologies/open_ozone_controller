@@ -10,6 +10,10 @@ void brightnessAction()
   mainMenu->getLCD()->print("LCD brightness:");
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(lcdBrightness);
+#ifdef DEBUG
+  Serial.println("LCD brightness:");
+  Serial.println(lcdBrightness);
+#endif
   delay(500);
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
@@ -34,6 +38,10 @@ void brightnessAction()
         lastButton = buttonState;
         clearSecondLcdRow();
         mainMenu->getLCD()->print(lcdBrightness);
+#ifdef DEBUG
+	    Serial.println("LCD brightness:");
+	    Serial.println(lcdBrightness);
+#endif
         analogWrite(lcdBrightPin, lcdBrightness);
       }
   }

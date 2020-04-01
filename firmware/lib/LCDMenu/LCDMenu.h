@@ -10,8 +10,9 @@ class LCDMenu{
 	LCDMenuItem* menuLast;
     void setName (String);
 	LiquidCrystal* LCD;
+	LCDMenu* parent;
   public: 
-    LCDMenu(String, LiquidCrystal*);
+    LCDMenu(String newName, LiquidCrystal* newLCD, LCDMenu* parentMenu = NULL);
 	LCDMenuItem* next();
 	LCDMenuItem* prev();
 	void addMenuItem (LCDMenuItem *);
@@ -20,6 +21,8 @@ class LCDMenu{
 	LiquidCrystal* getLCD();
 	void selectOption();
 	void display();
+	bool hasParentMenu();
+	LCDMenu* getParentMenu();
 }; 
 
 #endif
