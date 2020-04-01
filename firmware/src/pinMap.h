@@ -2,7 +2,7 @@
 #define _CONTROLLER_PINMAP_HEADER_
 
 // pinmap
-#define fanEnablePin  0
+#define humidifierPin 0
 #define safeSignPin   1 // also lock disable
 #define chipSelect1   2
 #define chipSelect2   3
@@ -16,7 +16,7 @@
 //SPI: 11 - 12 - 13
 #define buttonsPin    A0
 #define decomposerPin A1
-#define humidifierPin A2
+#define fanEnablePin  A2
 #define generatorPin  A3
 #define analogInput1  A4
 #define analogInput2  A5

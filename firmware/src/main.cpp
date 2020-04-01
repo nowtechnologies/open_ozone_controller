@@ -13,11 +13,13 @@
 // Globals
 bool ozoneSensorPresent    = false;
 bool humiditySensorPresent = false;
+
 AM2320 humiditySensor(&Wire);
 LiquidCrystal* LCD;
 LCDMenu* activeMenu;
 LCDMenu* mainMenu;
 LCDMenu* settingsMenu;
+LCDMenu* testMenu;
 Storage config;
 Timer   timer;
 
@@ -30,9 +32,8 @@ Timer   timer;
 #include "fwInfoAction.h"
 #include "humidityAction.h"
 #include "brightnessAction.h"
-#include "generatorAction.h"
+#include "testAction.h"
 #include "processAction.h"
-#include "settingsAction.h"
 #include "mainMenu.h"
 
 void initPeripherals(){
