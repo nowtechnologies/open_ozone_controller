@@ -37,7 +37,8 @@ void initPeripherals(){
 // ports
 #ifdef DEBUG
   Serial.begin(9600);
-#elseif
+  Serial.println("Debug mode is ON");
+#else
   pinMode(fanEnablePin, OUTPUT);  digitalWrite(fanEnablePin, LOW);
   pinMode(safeSignPin, OUTPUT);   digitalWrite(safeSignPin, LOW);
 #endif
