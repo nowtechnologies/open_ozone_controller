@@ -1,7 +1,11 @@
 #ifndef _CONTROLLER_MAIN_MENU_HEADER_
 #define _CONTROLLER_MAIN_MENU_HEADER_
 
-void nada(){}
+void nada() {
+#ifdef DEBUG
+	Serial.println("This feature is not available yet");
+#endif
+}
 
 void initMainMenu(){
   mainMenu     = new LCDMenu("Main Menu", LCD);

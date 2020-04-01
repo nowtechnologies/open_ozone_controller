@@ -8,6 +8,10 @@ void generatorAction()
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
   mainMenu->getLCD()->print("Ozone generator");
+#ifdef DEBUG
+  Serial.println("Ozone generator");
+  Serial.println(generatorEnabled?"ON":"OFF");
+#endif
   delay(500);
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
@@ -29,7 +33,7 @@ void generatorAction()
         digitalWrite(generatorPin, generatorEnabled);
 #ifdef DEBUG
 		Serial.println("Ozone generator");
-		Serial.println(generatorEnabled);
+		Serial.println(generatorEnabled?"ON":"OFF");
 #endif
       }
   }
