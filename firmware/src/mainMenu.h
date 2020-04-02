@@ -26,7 +26,7 @@ void initMenus(){
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Ozone level");
-  newItem->setAction(&nada);
+  newItem->setAction(&ozoneAction);
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Humidity level");

@@ -1,6 +1,10 @@
 // compile time switch
 // #define DEBUG
 
+// hard coded definitions
+#include "version.h"
+#include "pinMap.h"
+
 // Libraries
 #include <Arduino.h>
 #include <LiquidCrystal.h>
@@ -16,6 +20,7 @@ bool ozoneSensorPresent    = false;
 bool humiditySensorPresent = false;
 
 AM2320 humiditySensor(&Wire);
+MCP335X ozoneSensor(chipSelect2, MOSI, MISO, SCK);
 LiquidCrystal* LCD;
 LCDMenu* activeMenu;
 LCDMenu* mainMenu;
@@ -25,8 +30,6 @@ Storage config;
 Timer   timer;
 
 // Headers
-#include "version.h"
-#include "pinMap.h"
 #include "buttonUtils.h"
 #include "displayUtils.h"
 #include "timerAction.h"
@@ -35,6 +38,7 @@ Timer   timer;
 #include "brightnessAction.h"
 #include "testAction.h"
 #include "processAction.h"
+#include "ozoneAction.h"
 #include "mainMenu.h"
 
 void initPeripherals(){
