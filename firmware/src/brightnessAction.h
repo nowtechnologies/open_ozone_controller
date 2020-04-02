@@ -34,7 +34,7 @@ void brightnessAction()
         lastButton = buttonState;
         clearSecondLcdRow();
         mainMenu->getLCD()->print(lcdBrightness);
-        //analogWrite(lcdBrightPin, lcdBrightness);
+        analogWrite(lcdBrightPin, lcdBrightness);
       }
   }
 }
