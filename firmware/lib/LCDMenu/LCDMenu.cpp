@@ -68,17 +68,10 @@ void LCDMenu::display()
 	LCD->clear();
 	LCD->setCursor(0,0);
 	LCD->print(">" + menuCurrent->getName());
-#ifdef DEBUG
-	Serial.println("");
-	Serial.print(">"); Serial.println(menuCurrent->getName());
-#endif
 	if (menuCurrent->getNext() != menuCurrent)
 	{
 		LCD->setCursor(1,1);
 		LCD->print(menuCurrent->getNext()->getName());
-#ifdef DEBUG
-		Serial.println(menuCurrent->getNext()->getName());
-#endif
 	}
 }
 

@@ -2,8 +2,6 @@
 #define _CONTROLLER_PINMAP_HEADER_
 
 // pinmap
-#define humidifierPin 0
-#define safeSignPin   1 // also lock disable
 #define chipSelect1   2
 #define chipSelect2   3
 #define lcdData4Pin   4
@@ -13,12 +11,14 @@
 #define lcdResetPin   8
 #define lcdEnablePin  9
 #define lcdBrightPin  10
-//SPI: 11 - 12 - 13
+#define spiMOSI       11
+#define spiMISO       12
+#define spiSCK        13
 #define buttonsPin    A0
-#define decomposerPin A1
+#define generatorPin  A1
 #define fanEnablePin  A2
-#define generatorPin  A3
-#define analogInput1  A4
-#define analogInput2  A5
+#define decomposerPin A3
+#define humidifierPin A4
+#define safeSignPin   A5
 
 #endif

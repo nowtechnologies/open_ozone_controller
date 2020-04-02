@@ -2,9 +2,6 @@
 #define _CONTROLLER_MAIN_MENU_HEADER_
 
 void nada() {
-#ifdef DEBUG
-	Serial.println("This feature is not available yet");
-#endif
 }
 
 void settingsAction() {
@@ -26,7 +23,7 @@ void initMenus(){
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Ozone level");
-  newItem->setAction(&nada);
+  newItem->setAction(&ozoneAction);
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Humidity level");
@@ -67,18 +64,21 @@ void initMenus(){
 	newItem->setAction(&blowerTestAction);
 	testMenu->addMenuItem(newItem);
 
+	newItem = new LCDMenuItem("Test decomposer");
+	newItem->setAction(&decomposerTestAction);
+	testMenu->addMenuItem(newItem);
+
 	newItem = new LCDMenuItem("Test humidifier");
   newItem->setAction(&humidifierTestAction);
   testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test decomposer");
-  newItem->setAction(&decomposerTestAction);
+	newItem = new LCDMenuItem("Test lock");
+  newItem->setAction(&lockTestAction);
   testMenu->addMenuItem(newItem);
 
   // Set the mainMenu as active
   activeMenu = mainMenu;
-
-  displayPOST();
+  //displayPOST();
   activeMenu->display();
 }
 
