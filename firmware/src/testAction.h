@@ -4,13 +4,14 @@
 enum peripherals{
   generator,
   blower,
+  decomposer,
   humidifier,
-  decomposer
+  lock
 };
 
-String  nameOfPeripherals[] = {"Ozone generator","Blower","Humidifier","Decomposer"};
-uint8_t portPin[] = {generatorPin, fanEnablePin, humidifierPin, decomposerPin};
-bool    portEnabled[] = {false, false, false, false};
+String  nameOfPeripherals[] = {"Ozone generator","Blower","Decomposer","Humidifier","Lock"};
+uint8_t portPin[] = {generatorPin, fanEnablePin, decomposerPin, humidifierPin, safeSignPin};
+bool    portEnabled[] = {false, false, false, false, false};
 
 void testAction(int p)
 {
@@ -19,10 +20,6 @@ void testAction(int p)
   mainMenu->getLCD()->print(nameOfPeripherals[p]);
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(portEnabled[p]?"ON":"OFF");
-#ifdef DEBUG
-  Serial.println(nameOfPeripherals[p]);
-  Serial.println(portEnabled[p]?"ON":"OFF");
-#endif
   delay(500);
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
@@ -42,10 +39,6 @@ void testAction(int p)
         clearSecondLcdRow();
         mainMenu->getLCD()->print(portEnabled[p]?"ON":"OFF");
         digitalWrite(portPin[p], portEnabled[p]);
-#ifdef DEBUG
-		Serial.println(nameOfPeripherals[p]);
-		Serial.println(portEnabled[p]?"ON":"OFF");
-#endif
       }
   }
 }
@@ -61,6 +54,9 @@ void humidifierTestAction(){
 }
 void decomposerTestAction(){
   testAction(decomposer);
+}
+void lockTestAction(){
+  testAction(lock);
 }
 
 

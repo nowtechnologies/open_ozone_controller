@@ -17,13 +17,9 @@ void displaySaved()
 void displayPOST(){
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(humiditySensorPresent?"AM2320........OK":"AM2320......FAIL");
+  mainMenu->getLCD()->print(humiditySensorPresent?"AM2320........OK":"AM2320......FAIL"); // removed
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(ozoneSensorPresent?"MQ131.........OK":"MQ131.......FAIL");
-#ifdef DEBUG
-  Serial.println(humiditySensorPresent?"AM2320........OK":"AM2320......FAIL");
-  Serial.println(ozoneSensorPresent?"MQ131.........OK":"MQ131.......FAIL");
-#endif
   delay(2000);
 }
 

@@ -15,9 +15,9 @@
 #define spiMISO       12
 #define spiSCK        13
 #define buttonsPin    A0
-#define decomposerPin A1
+#define generatorPin  A1
 #define fanEnablePin  A2
-#define generatorPin  A3
+#define decomposerPin A3
 #define humidifierPin A4
 #define safeSignPin   A5
 

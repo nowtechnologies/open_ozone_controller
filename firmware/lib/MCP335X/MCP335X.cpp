@@ -2,7 +2,7 @@
 
 MCP335X::MCP335X(int CS, int MOSI, int MISO, int SCK) : CS(CS), MOSI(MOSI), MISO(MISO), SCK(SCK) {
 	w.longv = 0u;
-	OVL = 0; 
+	OVL = 0;
 	OVH = 0;
 	i = 0;
 	x = 0;
@@ -10,7 +10,7 @@ MCP335X::MCP335X(int CS, int MOSI, int MISO, int SCK) : CS(CS), MOSI(MOSI), MISO
 
 void MCP335X::init() {
 	SPI.begin();
-	SPI.setClockDivider(SPI_CLOCK_DIV32); // SPI clock rate < 5 MHz per MCP3550 spec
+	SPI.setClockDivider(SPI_CLOCK_DIV16); // SPI clock rate < 5 MHz per MCP3550 spec
 	SPI.setBitOrder(MSBFIRST);            // MSB or LSB first
 	SPI.setDataMode(SPI_MODE3);           // rising/falling edge of clock
 	digitalWrite(CS, HIGH);
@@ -29,13 +29,13 @@ unsigned long MCP335X::readWord() {
 }
 
 long MCP335X::readLong() {
-	digitalWrite(CS,HIGH); 
+	digitalWrite(CS,HIGH);
 	delayMicroseconds(100);
 	digitalWrite(CS,LOW); // start next conversion
 	delay(50);            // delay in milliseconds (nominal MCP3550-60 rate: 66.7 msec => 15 Hz)
 	i=0;                  // use i as loop counter
 	do {
-		i++;											  
+		i++;
 		delayMicroseconds(50);                            // loop keeps trying for up to 1 second
 	} while ((digitalRead(MISO)==HIGH) && (i < 20000));   // wait for ready bit to drop low (ready)
 	unsigned long w = readWord();    	 // data in:  32-bit word gets 24 bits via SPI port
@@ -46,7 +46,14 @@ long MCP335X::readLong() {
 	return x;
 }
 
-
 long MCP335X::getLastValue() {
 	return x;
+}
+
+float MCP335X::mapfloat(float x, float in_min, float in_max, float out_min, float out_max) {
+  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
+};
+
+float MCP335X::getOzonePPM(){
+	return mapfloat(x, 0, MCP335X_MAX_VALUE, 10, 1000);
 }

@@ -1,10 +1,10 @@
-// MCP335X driver, based on 
+// MCP335X driver, based on
 // an Arduino program to read Microchip MCP3550-60 using SPI bus
 // by John Beale www.bealecorner.com Feb. 9 2012
 
-/* 
+/*
 ===========================================================
-MCP3550 is a differential input 22-bit ADC (21 bits + sign)  
+MCP3550 is a differential input 22-bit ADC (21 bits + sign)
 +Fullscale = (+Vref -1 LSB) = 0x1fffff
 -Fullscale = (-Vref) = 0x200000
 1 LSB => Vref / 2^21    for Vref=2 V, 1 LSB = 0.95 uV
@@ -15,8 +15,10 @@ Datasheet Spec: noise = 2.5 uV RMS with Vref = 2.5 V
 #ifndef MCP335X_H
 #define MCP335X_H
 
+#define MCP335X_MAX_VALUE 4294967295
+
 #include <Arduino.h>
-#include <SPI.h> 
+#include <SPI.h>
 
 union fourByteWord {
 	unsigned long longv;
@@ -31,8 +33,8 @@ private:
 	int SCK;  /// SCK  (serial clock)
 	unsigned long readWord(); /// read one word from 22-bit ADC device
 	fourByteWord w;
-	byte OVL;   /// overflow condition LOW 
-	byte OVH;   /// overflow condition HIGH 
+	byte OVL;   /// overflow condition LOW
+	byte OVH;   /// overflow condition HIGH
 	unsigned int i;  /// loop counter for timeouts
 	unsigned long x;
 public:
@@ -40,6 +42,8 @@ public:
 	void init();
 	long readLong();
 	long getLastValue();
+	float getOzonePPM();
+	float mapfloat(float x, float in_min, float in_max, float out_min, float out_max);
 };
 
 #endif // MCP335X_H

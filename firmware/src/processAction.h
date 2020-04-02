@@ -8,10 +8,6 @@ void processAction()
   mainMenu->getLCD()->print("Decontamination");
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print("in progress...");
-#ifdef DEBUG
-  Serial.println("Decontamination");
-  Serial.println("in progress...");
-#endif
   holdUntilEscape();
 }
 

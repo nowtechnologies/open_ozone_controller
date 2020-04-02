@@ -1,6 +1,3 @@
-// compile time switch
-// #define DEBUG
-
 // hard coded definitions
 #include "version.h"
 #include "pinMap.h"
@@ -41,28 +38,26 @@ Timer   timer;
 #include "ozoneAction.h"
 #include "mainMenu.h"
 
-void initPeripherals(){
-
-// ports
-#ifdef DEBUG
-  Serial.begin(9600);
-  Serial.println("Debug mode is ON");
-#else
-  pinMode(fanEnablePin, OUTPUT);  digitalWrite(fanEnablePin, LOW);
-  pinMode(safeSignPin, OUTPUT);   digitalWrite(safeSignPin, LOW);
-#endif
-  pinMode(generatorPin, OUTPUT);  digitalWrite(generatorPin, LOW);
+void initPorts(){
+  pinMode(generatorPin,  OUTPUT); digitalWrite(generatorPin,  LOW);
+  pinMode(fanEnablePin,  OUTPUT); digitalWrite(fanEnablePin,  LOW);
   pinMode(decomposerPin, OUTPUT); digitalWrite(decomposerPin, LOW);
   pinMode(humidifierPin, OUTPUT); digitalWrite(humidifierPin, LOW);
-  pinMode(lcdBrightPin, OUTPUT);
+  pinMode(safeSignPin,   OUTPUT); digitalWrite(safeSignPin,   LOW);
+  //pinMode(lcdBrightPin, OUTPUT);
+}
+
+void initPeripherals(){
+
+  initPorts();
 
   // display
   lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
   LCD->begin(16,2);
   LCD->clear();
-  analogWrite(lcdBrightPin, lcdBrightness);
-  
+  //analogWrite(lcdBrightPin, lcdBrightness);
+
   // ozone sensor (ADC)
   ozoneSensor.init();
 
@@ -81,6 +76,7 @@ void setup()
 {
   initPeripherals();
   initMenus();
+  initPorts(); // just to be on the safe side
 }
 
 void loop()
@@ -103,9 +99,6 @@ void loop()
 	  break;
 	case btnLEFT :
 	  if (activeMenu->hasParentMenu()) {
-#ifdef DEBUG
-	      Serial.println("Setting parentMenu as activeMenu");
-#endif
 		  activeMenu = activeMenu->getParentMenu();
 	  }
 	  break;

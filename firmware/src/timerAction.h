@@ -10,10 +10,7 @@ void timerAction(){
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(timerSeconds);
   mainMenu->getLCD()->print(" sec");
-#ifdef DEBUG
-  Serial.println("Start timer: ");
-  Serial.print(timerSeconds); Serial.println(" sec");
-#endif
+
   while (buttonState != btnLEFT) {
 
       buttonState = read_LCD_buttons();
@@ -35,9 +32,7 @@ void timerAction(){
             mainMenu->getLCD()->clear();
             mainMenu->getLCD()->setCursor(0,0);
             mainMenu->getLCD()->print("Time left: ");
-#ifdef DEBUG
-			Serial.println("Time left: ");
-#endif
+
             digitalWrite(generatorPin, HIGH);
         break;
         }
@@ -45,9 +40,6 @@ void timerAction(){
         clearSecondLcdRow();
         mainMenu->getLCD()->print(timerSeconds);
         mainMenu->getLCD()->print(" sec");
-#ifdef DEBUG
-		Serial.print(timerSeconds); Serial.println(" sec");
-#endif
       }
 
       if (timerStarted)
@@ -58,9 +50,6 @@ void timerAction(){
           clearSecondLcdRow();
           mainMenu->getLCD()->print(remaining);
           mainMenu->getLCD()->print(" sec");
-#ifdef DEBUG
-		  Serial.print(remaining); Serial.println(" sec");
-#endif
           lastTime = remaining;
         }
         if (timer.poll()) {

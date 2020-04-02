@@ -7,8 +7,9 @@ void ozoneAction()
     mainMenu->getLCD()->clear();
     mainMenu->getLCD()->setCursor(0,0);
     mainMenu->getLCD()->print("Ozone level:");
-    mainMenu->getLCD()->setCursor(0,1);
-    mainMenu->getLCD()->print(ozoneSensor.getLastValue());
+    clearSecondLcdRow();
+    mainMenu->getLCD()->print(ozoneSensor.getOzonePPM());
+    mainMenu->getLCD()->print(" ppm");
     delay(200);
   }
 }
