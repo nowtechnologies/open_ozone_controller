@@ -9,6 +9,7 @@
 #include <Storage.h>
 #include <Timer.h>
 #include <AM2320.h>
+#include <MCP335X.h>
 
 // Globals
 bool ozoneSensorPresent    = false;
