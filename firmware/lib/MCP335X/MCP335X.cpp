@@ -1,6 +1,14 @@
 #include "MCP335X.h"
 
 MCP335X::MCP335X(int CS, int MOSI, int MISO, int SCK) : CS(CS), MOSI(MOSI), MISO(MISO), SCK(SCK) {
+	w.longv = 0u;
+	OVL = 0; 
+	OVH = 0;
+	i = 0;
+	x = 0;
+}
+
+void MCP335X::init() {
 	SPI.begin();
 	SPI.setClockDivider(SPI_CLOCK_DIV32); // SPI clock rate < 5 MHz per MCP3550 spec
 	SPI.setBitOrder(MSBFIRST);            // MSB or LSB first
@@ -10,11 +18,6 @@ MCP335X::MCP335X(int CS, int MOSI, int MISO, int SCK) : CS(CS), MOSI(MOSI), MISO
 	pinMode(MOSI, OUTPUT);
 	pinMode(MISO, INPUT);
 	pinMode(SCK,  OUTPUT);
-	w.longv = 0u;
-	OVL = 0; 
-	OVH = 0;
-	i = 0;
-	x = 0;
 }
 
 unsigned long MCP335X::readWord() {
