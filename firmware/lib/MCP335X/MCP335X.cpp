@@ -10,7 +10,7 @@ MCP335X::MCP335X(int CS, int MOSI, int MISO, int SCK) : CS(CS), MOSI(MOSI), MISO
 
 void MCP335X::init() {
 	SPI.begin();
-	SPI.setClockDivider(SPI_CLOCK_DIV16); // SPI clock rate < 5 MHz per MCP3550 spec
+	SPI.setClockDivider(SPI_CLOCK_DIV64); // SPI clock rate < 5 MHz per MCP3550 spec
 	SPI.setBitOrder(MSBFIRST);            // MSB or LSB first
 	SPI.setDataMode(SPI_MODE3);           // rising/falling edge of clock
 	digitalWrite(CS, HIGH);
@@ -55,5 +55,6 @@ float MCP335X::mapfloat(float x, float in_min, float in_max, float out_min, floa
 };
 
 float MCP335X::getOzonePPM(){
-	return mapfloat(x, 0, MCP335X_MAX_VALUE, 10, 1000);
+	float o3 = mapfloat(x, 0, MCP335X_MAX_VALUE, 10, 1000);
+	if (o3 < 10) return 0; else return o3;
 }

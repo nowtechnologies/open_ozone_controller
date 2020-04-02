@@ -9,14 +9,12 @@
 #include <LCDMenuItem.h>
 #include <Storage.h>
 #include <Timer.h>
-#include <AM2320.h>
 #include <MCP335X.h>
 
 // Globals
 bool ozoneSensorPresent    = false;
 bool humiditySensorPresent = false;
 
-AM2320 humiditySensor(&Wire);
 MCP335X ozoneSensor(chipSelect2, spiMOSI, spiMISO, spiSCK);
 LiquidCrystal* LCD;
 LCDMenu* activeMenu;
@@ -48,28 +46,14 @@ void initPorts(){
 }
 
 void initPeripherals(){
-
   initPorts();
-
   // display
   lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
   LCD->begin(16,2);
   LCD->clear();
   //analogWrite(lcdBrightPin, lcdBrightness);
-
-  // ozone sensor (ADC)
   ozoneSensor.init();
-
-  // humidity sensor
-  Wire.begin();
-  if (humiditySensor.Read()>0) {
-    humiditySensorPresent = false;
-  }
-  else {
-    humiditySensorPresent = true;
-  }
-
 }
 
 void setup()
