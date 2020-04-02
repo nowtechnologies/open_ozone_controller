@@ -11,9 +11,9 @@
 #define lcdResetPin   8
 #define lcdEnablePin  9
 #define lcdBrightPin  10
-#define MOSI          11
-#define MISO          12
-#define SCK           13
+#define spiMOSI       11
+#define spiMISO       12
+#define spiSCK        13
 #define buttonsPin    A0
 #define decomposerPin A1
 #define fanEnablePin  A2

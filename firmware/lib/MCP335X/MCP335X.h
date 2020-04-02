@@ -37,6 +37,7 @@ private:
 	unsigned long x;
 public:
 	MCP335X(int CS, int MOSI, int MISO, int SCK);
+	void init();
 	long readLong();
 	long getLastValue();
 };

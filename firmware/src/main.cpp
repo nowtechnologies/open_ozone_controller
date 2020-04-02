@@ -20,7 +20,7 @@ bool ozoneSensorPresent    = false;
 bool humiditySensorPresent = false;
 
 AM2320 humiditySensor(&Wire);
-MCP335X ozoneSensor(chipSelect2, MOSI, MISO, SCK);
+MCP335X ozoneSensor(chipSelect2, spiMOSI, spiMISO, spiSCK);
 LiquidCrystal* LCD;
 LCDMenu* activeMenu;
 LCDMenu* mainMenu;
@@ -62,6 +62,9 @@ void initPeripherals(){
   LCD->begin(16,2);
   LCD->clear();
   analogWrite(lcdBrightPin, lcdBrightness);
+  
+  // ozone sensor (ADC)
+  ozoneSensor.init();
 
   // humidity sensor
   Wire.begin();
