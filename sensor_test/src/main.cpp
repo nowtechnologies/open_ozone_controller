@@ -17,10 +17,10 @@ Datasheet Spec: noise = 2.5 uV RMS with Vref = 2.5 V
 // #define MISO 12
 // #define SCK  13
 
-#define CS   53     // bring CS high for ADC sleep mode, low to start new conversion
-#define MOSI 51  // MOSI is not used for this device
-#define MISO 50  // status and data bits from ADC
-#define SCK  52   // SPI clock from Arduino to ADC
+#define CS   10     // bring CS high for ADC sleep mode, low to start new conversion
+#define MOSI 11   // MOSI is not used for this device
+#define MISO 12  // status and data bits from ADC
+#define SCK  13   // SPI clock from Arduino to ADC
 
 /**
  * read one word from 22-bit ADC device  MCP3550
@@ -43,11 +43,11 @@ void setup() {
  SPI.setClockDivider(SPI_CLOCK_DIV4);  // SPI clock rate < 5 MHz per MCP3550 spec
  SPI.setBitOrder(MSBFIRST);     // MSB or LSB first
  SPI.setDataMode(SPI_MODE3);        // rising/falling edge of clock
- digitalWrite(CS, HIGH);
  pinMode(CS, OUTPUT);    // CS (out from Arduino)
  pinMode(MOSI, OUTPUT);  // MOSI (data out from Arduino)
  pinMode(MISO, INPUT);   // MISO (data in to Arduino)
  pinMode(SCK, OUTPUT);   // SCK  (serial clock)
+ digitalWrite(CS, HIGH);
 } // end setup()
 
 void loop() {

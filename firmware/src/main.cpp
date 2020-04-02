@@ -15,8 +15,8 @@
 bool ozoneSensorPresent    = false;
 bool humiditySensorPresent = false;
 
-MCP335X ozoneSensor(53, 51, 50, 52);
-//MCP335X ozoneSensor(chipSelect2, spiMOSI, spiMISO, spiSCK);
+// MCP335X ozoneSensor(53, 51, 50, 52);
+// MCP335X ozoneSensor(chipSelect2, spiMOSI, spiMISO, spiSCK);
 LiquidCrystal* LCD;
 LCDMenu* activeMenu;
 LCDMenu* mainMenu;
@@ -43,19 +43,19 @@ void initPorts(){
   pinMode(decomposerPin, OUTPUT); digitalWrite(decomposerPin, LOW);
   pinMode(humidifierPin, OUTPUT); digitalWrite(humidifierPin, LOW);
   pinMode(safeSignPin,   OUTPUT); digitalWrite(safeSignPin,   LOW);
-  pinMode(lcdBrightPin, OUTPUT);
+  pinMode(lcdBrightPin, OUTPUT);  digitalWrite(lcdBrightPin,  HIGH);
 }
 
 void initPeripherals(){
   initPorts();
-  Serial.begin(115200);
+  // Serial.begin(115200);
   // display
   lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
   LCD->begin(16,2);
   LCD->clear();
-  analogWrite(lcdBrightPin, lcdBrightness);
-  ozoneSensor.init();
+  // analogWrite(lcdBrightPin, lcdBrightness);
+  // ozoneSensor.init();
 }
 
 void setup()
