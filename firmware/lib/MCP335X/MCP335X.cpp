@@ -55,6 +55,5 @@ float MCP335X::mapfloat(float x, float in_min, float in_max, float out_min, floa
 };
 
 float MCP335X::getOzonePPM(){
-	float o3 = mapfloat(x, 0, MCP335X_MAX_VALUE, 10, 1000);
-	if (o3 < 10) return 0; else return o3;
+  return mapfloat(x, 0, MCP335X_MAX_VALUE, 1000, 10);
 }

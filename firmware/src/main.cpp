@@ -42,7 +42,7 @@ void initPorts(){
   pinMode(decomposerPin, OUTPUT); digitalWrite(decomposerPin, LOW);
   pinMode(humidifierPin, OUTPUT); digitalWrite(humidifierPin, LOW);
   pinMode(safeSignPin,   OUTPUT); digitalWrite(safeSignPin,   LOW);
-  //pinMode(lcdBrightPin, OUTPUT);
+  pinMode(lcdBrightPin, OUTPUT);
 }
 
 void initPeripherals(){
@@ -52,7 +52,7 @@ void initPeripherals(){
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
   LCD->begin(16,2);
   LCD->clear();
-  //analogWrite(lcdBrightPin, lcdBrightness);
+  analogWrite(lcdBrightPin, lcdBrightness);
   ozoneSensor.init();
 }
 
