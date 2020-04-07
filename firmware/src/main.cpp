@@ -11,10 +11,11 @@
 #include <Timer.h>
 #include <MCP335X.h>
 #include <MQ131.h>
+#include <uartcomm.h>
 
 // Globals
-bool ozoneSensorPresent    = false;
-bool humiditySensorPresent = false;
+bool SPIozoneSensorPresent    = false;
+bool SPIhumiditySensorPresent = false; // probably going to be a BMP280
 
 MCP335X adc(chipSelect2, spiMOSI, spiMISO, spiSCK);
 MQ131   ozoneSensor(MQ131Model::HighConcentration, &adc);
@@ -23,8 +24,8 @@ LCDMenu* activeMenu;
 LCDMenu* mainMenu;
 LCDMenu* settingsMenu;
 LCDMenu* testMenu;
-Storage config;
-Timer   timer;
+Storage  config;
+Timer    timer;
 
 // Headers
 #include "buttonUtils.h"
@@ -55,9 +56,16 @@ void initPeripherals(){
   LCD->begin(16,2);
   LCD->clear();
   analogWrite(lcdBrightPin, lcdBrightness);
+  // SPI ozone sensor
   adc.begin();
-  ozoneSensor.begin();
-  ozoneSensor.calibrate();
+  if (adc.isConnected()){
+    ozoneSensor.begin();
+    ozoneSensor.calibrate();
+    SPIozoneSensorPresent = true;
+  }
+  else SPIozoneSensorPresent = false;
+  // UART
+  Serial.begin(9600);
 }
 
 void setup()
@@ -96,5 +104,12 @@ void loop()
     }
     if (buttonState != btnNONE) activeMenu->display();
     lastButton = buttonState;
+  }
+
+  int count = Serial.available();
+  while (count > 0) {
+    uint8_t b = (uint8_t)Serial.read();
+    append(b); // [2256 byte]
+    count--;
   }
 }

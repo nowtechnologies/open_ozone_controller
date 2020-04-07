@@ -40,6 +40,7 @@ private:
 public:
 	MCP335X(int CS, int MOSI, int MISO, int SCK);
 	void begin();
+	bool isConnected();
 	long read();
 	long getLastValue();
 	float getOzonePPM();

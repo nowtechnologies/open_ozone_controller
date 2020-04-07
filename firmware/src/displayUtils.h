@@ -17,10 +17,10 @@ void displaySaved()
 void displayPOST(){
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(humiditySensorPresent?"AM2320........OK":"AM2320......FAIL"); // removed
+  mainMenu->getLCD()->print(SPIhumiditySensorPresent?"BMP280........OK":"BMP280........NC");
   mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(ozoneSensorPresent?"MQ131.........OK":"MQ131.......FAIL");
-  delay(2000);
+  mainMenu->getLCD()->print(SPIozoneSensorPresent?"MQ131.........OK":"MQ131.........NC");
+  delay(1000);
 }
 
 #endif

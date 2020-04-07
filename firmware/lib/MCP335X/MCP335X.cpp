@@ -57,3 +57,7 @@ float MCP335X::mapfloat(float x, float in_min, float in_max, float out_min, floa
 float MCP335X::getOzonePPM(){
   return mapfloat(x, 0, MCP335X_MAX_VALUE, 1000, 10);
 }
+
+bool MCP335X::isConnected(){
+	return bool(read());
+}
