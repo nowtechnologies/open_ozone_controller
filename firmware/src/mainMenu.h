@@ -80,7 +80,7 @@ void initMenus(){
   newItem->setAction(&lockTestAction);
   testMenu->addMenuItem(newItem);
 
-  displayPOST();
+  // displayPOST();
   // Set the mainMenu as active
   activeMenu = mainMenu;
   activeMenu->display();

@@ -57,13 +57,13 @@ void initPeripherals(){
   LCD->clear();
   analogWrite(lcdBrightPin, lcdBrightness);
   // SPI ozone sensor
-  adc.begin();
-  if (adc.isConnected()){
-    ozoneSensor.begin();
-    ozoneSensor.calibrate();
-    SPIozoneSensorPresent = true;
-  }
-  else SPIozoneSensorPresent = false;
+  // adc.begin();
+  // if (adc.isConnected()){
+  //   ozoneSensor.begin();
+  //   ozoneSensor.calibrate();
+  //   SPIozoneSensorPresent = true;
+  // }
+  // else SPIozoneSensorPresent = false;
   // UART
   Serial.begin(9600);
 }
@@ -72,39 +72,45 @@ void setup()
 {
   initPeripherals();
   initMenus();
-  initPorts();
+  // initPorts();
 }
 
 void loop()
 {
-  int buttonState = read_LCD_buttons();
-  if (buttonState != lastButton)
-  {
-    activeMenu->getLCD()->setCursor(0,0);
-    switch (buttonState)
-    {
-    case btnDOWN :
-      activeMenu->getLCD()->print(activeMenu->next()->getName());
-      break;
-    case btnUP :
-      activeMenu->getLCD()->print(activeMenu->prev()->getName());
-      break;
-    case btnRIGHT :
-      delay(100);
-      activeMenu->selectOption();
-	  break;
-	case btnLEFT :
-	  if (activeMenu->hasParentMenu()) {
-		  activeMenu = activeMenu->getParentMenu();
-	  }
-	  break;
-    case btnTIMER :
-      timerAction();
-      break;
-    }
-    if (buttonState != btnNONE) activeMenu->display();
-    lastButton = buttonState;
-  }
+  // int buttonState = read_LCD_buttons();
+  // if (buttonState != lastButton)
+  // {
+  //   activeMenu->getLCD()->setCursor(0,0);
+  //   switch (buttonState)
+  //   {
+  //   case btnDOWN :
+  //     activeMenu->getLCD()->print(activeMenu->next()->getName());
+  //     break;
+  //   case btnUP :
+  //     activeMenu->getLCD()->print(activeMenu->prev()->getName());
+  //     break;
+  //   case btnRIGHT :
+  //     // delay(100);
+  //     activeMenu->selectOption();
+	//   break;
+	// case btnLEFT :
+	//   if (activeMenu->hasParentMenu()) {
+	// 	  activeMenu = activeMenu->getParentMenu();
+	//   }
+	//   break;
+  //   case btnTIMER :
+  //     timerAction();
+  //     break;
+  //   }
+  //   if (buttonState != btnNONE) activeMenu->display();
+  //   lastButton = buttonState;
+  // }
+
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print(sensorPacket.humidity);
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print(sensorPacket.ozonePPM);
 
   int count = Serial.available();
   while (count > 0) {
