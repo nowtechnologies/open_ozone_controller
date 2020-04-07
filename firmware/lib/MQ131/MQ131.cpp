@@ -45,10 +45,14 @@ void MQ131::begin(int _pinHeater, int _pinSensor) {
 
 	// Check pins
 	if (adc == NULL && _pinSensor == -1) {
+		#ifdef MQ131_VERBOSE
 		Serial.println("ERROR: supplying sensor pin (analog input) is necessary if MCP335X is not used!");
+		#endif
 	}
 	if (controlHeater == true && _pinHeater == -1) {
+		#ifdef MQ131_VERBOSE
 		Serial.println("ERROR: supplying heater pin (digital output) is necessary if sensor control is used!");
+		#endif
 	}
 
 	// Store the circuit info (pin and load resistance)
