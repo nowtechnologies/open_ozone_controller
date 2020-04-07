@@ -26,13 +26,6 @@
 typedef struct {
 	uint8_t  firstLeadIn;
 	uint8_t  lastLeadIn;
-	union {
-		struct {
-			uint8_t ack :1; // LSB
-			uint8_t reserved :7; // not used, yet
-		} bits;
-		uint8_t	value;
-	} flags;
 	uint8_t  packetLength;
 	uint8_t  packetID;
 	uint8_t  headerCRC;

@@ -42,9 +42,6 @@ void append(uint8_t b) {
 								process(packetHeader, serialBuffer); // [1716 byte]
 							} else {
 								// data crc error - read next packet
-								// ErrorDetails e;
-								// e.words[1] = checksum;
-								// e.words[0] = datacrc;
 							}
 
 							serialBuffer.pop(packetHeader.packetLength);
@@ -68,4 +65,25 @@ void append(uint8_t b) {
 		// error - buffer overflow
 		serialBuffer.clear();
 	} // push
+}
+
+void send(uint8_t pid, const void *data, size_t length) {
+	static UARTHEADER header;
+	header.firstLeadIn  = UART_LI_F;
+	header.lastLeadIn   = UART_LI_L;
+	header.packetLength	= (uint8_t)length + 2; // +2 bytes for crc16
+	header.packetID			= pid;
+	header.headerCRC		= crc8(&header, 0, sizeof(UARTHEADER) - 1);
+  // write Header
+	for (size_t i = 0; i < sizeof(UARTHEADER); ++i) {
+		Serial.write(((uint8_t*)&header)[i]);
+	}
+	// write Data
+	for (size_t i = 0; i < length; ++i) {
+		Serial.write(((uint8_t*)data)[i]);
+	}
+	// Write Data CRC
+	uint16_t crc = crc16(data, 0, length);
+	Serial.write((uint8_t)(crc & 0x00ff)); // LSB
+	Serial.write((uint8_t)((crc & 0xff00) >> 8)); // MSB
 }
