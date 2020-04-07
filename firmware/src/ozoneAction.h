@@ -2,25 +2,35 @@
 void ozoneDisplayAction()
 {
   int buttonState = btnNONE;
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("Ozone level:");
-  while (buttonState != btnLEFT) {
-      buttonState = read_LCD_buttons();
-      if (SPIozoneSensorPresent)
-      {
-        ozoneSensor.read();
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(ozoneSensor.getO3());
-        mainMenu->getLCD()->print(" ppm");
-        delay(200);
-      }
-      else {
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(sensorPacket.ozonePPM);
-        mainMenu->getLCD()->print(" ppm");
-        delay(200);
-      }
+  if (SPIozoneSensorPresent || ozoneMonitorConnected)
+  {
+    mainMenu->getLCD()->clear();
+    mainMenu->getLCD()->setCursor(0,0);
+    mainMenu->getLCD()->print("Ozone level:");
+    while (buttonState != btnLEFT) {
+        buttonState = read_LCD_buttons();
+        if (SPIozoneSensorPresent)
+        {
+          ozoneSensor.read();
+          clearSecondLcdRow();
+          mainMenu->getLCD()->print(ozoneSensor.getO3());
+          mainMenu->getLCD()->print(" ppm");
+          delay(100);
+        }
+        else if (ozoneMonitorConnected)
+        {
+          checkIncomingSerial();
+          clearSecondLcdRow();
+          mainMenu->getLCD()->print(sensorPacket.ozonePPM); // there are no threads !
+          mainMenu->getLCD()->print(" ppm");
+          delay(100);
+        }
+    }
+  } else {
+    mainMenu->getLCD()->clear();
+    mainMenu->getLCD()->setCursor(0,0);
+    mainMenu->getLCD()->print("No SPI O3 Sensor");
+    holdUntilEscape();
   }
 }
 
@@ -45,5 +55,6 @@ void ozoneCalibrationAction()
     mainMenu->getLCD()->clear();
     mainMenu->getLCD()->setCursor(0,0);
     mainMenu->getLCD()->print("No SPI O3 Sensor");
+    holdUntilEscape();
   }
 }

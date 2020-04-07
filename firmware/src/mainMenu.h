@@ -18,7 +18,7 @@ void initMenus(){
   mainMenu = new LCDMenu("Main Menu", LCD);
   LCDMenuItem *newItem;
 
-  newItem = new LCDMenuItem("Start");
+  newItem = new LCDMenuItem("Start process");
   newItem->setAction(&processAction);
   mainMenu->addMenuItem(newItem);
 
@@ -26,19 +26,19 @@ void initMenus(){
   newItem->setAction(&ozoneDisplayAction);
   mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Humidity level");
-  newItem->setAction(&humidityAction);
-  mainMenu->addMenuItem(newItem);
+  // newItem = new LCDMenuItem("Humidity level");
+  // newItem->setAction(&humidityAction);
+  // mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Set timer");
-  newItem->setAction(&timerAction);
-  mainMenu->addMenuItem(newItem);
+  // newItem = new LCDMenuItem("Set timer");
+  // newItem->setAction(&timerAction);
+  // mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Settings");
   newItem->setAction(&settingsAction);
   mainMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test periphery");
+	newItem = new LCDMenuItem("Test outputs");
 	newItem->setAction(&testAction);
 	mainMenu->addMenuItem(newItem);
 

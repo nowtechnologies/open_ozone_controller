@@ -39,7 +39,8 @@ Timer    timer;
 #include "ozoneAction.h"
 #include "mainMenu.h"
 
-void initPorts(){
+void initPorts()
+{
   pinMode(generatorPin,  OUTPUT); digitalWrite(generatorPin,  LOW);
   pinMode(fanEnablePin,  OUTPUT); digitalWrite(fanEnablePin,  LOW);
   pinMode(decomposerPin, OUTPUT); digitalWrite(decomposerPin, LOW);
@@ -48,74 +49,60 @@ void initPorts(){
   pinMode(lcdBrightPin,  OUTPUT);
 }
 
-void initPeripherals(){
-  initPorts();
-  // display
+void setup()
+{
+  // Display
   lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
   LCD->begin(16,2);
   LCD->clear();
   analogWrite(lcdBrightPin, lcdBrightness);
+  initMenus();
   // SPI ozone sensor
-  // adc.begin();
-  // if (adc.isConnected()){
-  //   ozoneSensor.begin();
-  //   ozoneSensor.calibrate();
-  //   SPIozoneSensorPresent = true;
-  // }
-  // else SPIozoneSensorPresent = false;
+  adc.begin();
+  if (adc.isConnected()){
+    ozoneSensor.begin();
+    ozoneSensor.calibrate();
+    SPIozoneSensorPresent = true;
+  }
+  else {
+    SPIozoneSensorPresent = false;
+  }
+  // GPIO
+  initPorts();
   // UART
   Serial.begin(9600);
 }
 
-void setup()
-{
-  initPeripherals();
-  initMenus();
-  // initPorts();
-}
-
 void loop()
 {
-  // int buttonState = read_LCD_buttons();
-  // if (buttonState != lastButton)
-  // {
-  //   activeMenu->getLCD()->setCursor(0,0);
-  //   switch (buttonState)
-  //   {
-  //   case btnDOWN :
-  //     activeMenu->getLCD()->print(activeMenu->next()->getName());
-  //     break;
-  //   case btnUP :
-  //     activeMenu->getLCD()->print(activeMenu->prev()->getName());
-  //     break;
-  //   case btnRIGHT :
-  //     // delay(100);
-  //     activeMenu->selectOption();
-	//   break;
-	// case btnLEFT :
-	//   if (activeMenu->hasParentMenu()) {
-	// 	  activeMenu = activeMenu->getParentMenu();
-	//   }
-	//   break;
-  //   case btnTIMER :
-  //     timerAction();
-  //     break;
-  //   }
-  //   if (buttonState != btnNONE) activeMenu->display();
-  //   lastButton = buttonState;
-  // }
-
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(sensorPacket.humidity);
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(sensorPacket.ozonePPM);
-
-  int count = Serial.available();
-  while (count > 0) {
-    uint8_t b = (uint8_t)Serial.read();
-    append(b); // [2256 byte]
-    count--;
+  checkIncomingSerial();
+  int buttonState = read_LCD_buttons();
+  if (buttonState != lastButton)
+  {
+    activeMenu->getLCD()->setCursor(0,0);
+    switch (buttonState)
+    {
+    case btnDOWN :
+      activeMenu->getLCD()->print(activeMenu->next()->getName());
+      break;
+    case btnUP :
+      activeMenu->getLCD()->print(activeMenu->prev()->getName());
+      break;
+    case btnRIGHT :
+      // delay(100);
+      activeMenu->selectOption();
+	  break;
+	  case btnLEFT :
+  	  if (activeMenu->hasParentMenu()) {
+  		  activeMenu = activeMenu->getParentMenu();
+  	  }
+	  break;
+    case btnTIMER :
+      timerAction();
+      break;
+    }
+    if (buttonState != btnNONE) activeMenu->display();
+    lastButton = buttonState;
   }
 }

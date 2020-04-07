@@ -8,12 +8,14 @@
 RingBuffer serialBuffer(UART_BUFFER_SIZE);
 UARTHEADER packetHeader;
 SENSORPACK sensorPacket;
+bool ozoneMonitorConnected = false;
 
 void process(const UARTHEADER &header, RingBuffer &buffer) {
 
   if(header.packetID == PID_SENSOR) {
     if(buffer.capacity() >= sizeof(SENSORPACK)) {
       buffer.get(0, (uint8_t*)&sensorPacket, sizeof(SENSORPACK));
+      ozoneMonitorConnected = true; // TODO: timeout
     }
   }
 }
@@ -65,6 +67,15 @@ void append(uint8_t b) {
 		// error - buffer overflow
 		serialBuffer.clear();
 	} // push
+}
+
+void checkIncomingSerial(){
+  int count = Serial.available();
+  while (count > 0) {
+    uint8_t b = (uint8_t)Serial.read();
+    append(b); // [2256 byte]
+    count--;
+  }
 }
 
 void send(uint8_t pid, const void *data, size_t length) {
