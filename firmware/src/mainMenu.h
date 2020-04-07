@@ -18,8 +18,12 @@ void initMenus(){
   mainMenu = new LCDMenu("Main Menu", LCD);
   LCDMenuItem *newItem;
 
-  newItem = new LCDMenuItem("Start process");
+  newItem = new LCDMenuItem("START !");
   newItem->setAction(&processAction);
+  mainMenu->addMenuItem(newItem);
+
+  newItem = new LCDMenuItem("Configure");
+  newItem->setAction(&settingsAction);
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Ozone level");
@@ -34,20 +38,24 @@ void initMenus(){
   // newItem->setAction(&timerAction);
   // mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Settings");
-  newItem->setAction(&settingsAction);
-  mainMenu->addMenuItem(newItem);
-
-	newItem = new LCDMenuItem("Test outputs");
-	newItem->setAction(&testAction);
-	mainMenu->addMenuItem(newItem);
-
   // Settings Menu, whose parent menu is mainMenu
   settingsMenu = new LCDMenu("Settings Menu", LCD, mainMenu);
 
-  newItem = new LCDMenuItem("Calibrate O3");
-  newItem->setAction(&ozoneCalibrationAction);
+  newItem = new LCDMenuItem("Set Decon Time");
+  newItem->setAction(&deconTimeAction);
   settingsMenu->addMenuItem(newItem);
+
+  newItem = new LCDMenuItem("Set Kill Level");
+  newItem->setAction(&killLevelAction);
+  settingsMenu->addMenuItem(newItem);
+
+  newItem = new LCDMenuItem("Set Lock");
+  newItem->setAction(&lockInstalledAction);
+  settingsMenu->addMenuItem(newItem);
+
+  // newItem = new LCDMenuItem("Calibrate O3");
+  // newItem->setAction(&ozoneCalibrationAction);
+  // settingsMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Set brightness");
   newItem->setAction(&brightnessAction);
@@ -58,6 +66,10 @@ void initMenus(){
   settingsMenu->addMenuItem(newItem);
 
 	// Test actuators
+  newItem = new LCDMenuItem("Test outputs");
+	newItem->setAction(&testAction);
+	mainMenu->addMenuItem(newItem);
+
 	testMenu = new LCDMenu("Test Menu", LCD, mainMenu);
 
 	newItem = new LCDMenuItem("Test generator");

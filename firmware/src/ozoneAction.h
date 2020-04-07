@@ -29,7 +29,7 @@ void ozoneDisplayAction()
   } else {
     mainMenu->getLCD()->clear();
     mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print("No SPI O3 Sensor");
+    mainMenu->getLCD()->print("No Sensor");
     holdUntilEscape();
   }
 }

@@ -27,13 +27,31 @@ LCDMenu* testMenu;
 Storage  config;
 Timer    timer;
 
-// Headers
+enum peripherals{
+  generator,
+  blower,
+  decomposer,
+  humidifier,
+  lock
+};
+
+String  nameOfPeripherals[] = {"Generator","Blower","Decomposer","Humidifier","Lock"};
+uint8_t portPin[] = {generatorPin, fanEnablePin, decomposerPin, humidifierPin, safeSignPin};
+bool    portEnabled[] = {false, false, false, false, false};
+
+// Stored variables
+uint8_t deconTime;
+uint8_t killLevel;
+uint8_t lcdBrightness;
+bool    lockInstalled;
+
+// Lazy headers
 #include "buttonUtils.h"
 #include "displayUtils.h"
 #include "timerAction.h"
 #include "fwInfoAction.h"
 #include "humidityAction.h"
-#include "brightnessAction.h"
+#include "settingsAction.h"
 #include "testAction.h"
 #include "processAction.h"
 #include "ozoneAction.h"
@@ -51,6 +69,11 @@ void initPorts()
 
 void setup()
 {
+  // Config
+  config.begin();
+  deconTime = config.deconTime();
+  killLevel = config.killLevel();
+  lockInstalled = config.lockInstalled();
   // Display
   lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
@@ -99,7 +122,7 @@ void loop()
   	  }
 	  break;
     case btnTIMER :
-      timerAction();
+      // timerAction();
       break;
     }
     if (buttonState != btnNONE) activeMenu->display();
