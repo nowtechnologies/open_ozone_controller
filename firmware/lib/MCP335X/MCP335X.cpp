@@ -8,7 +8,7 @@ MCP335X::MCP335X(int CS, int MOSI, int MISO, int SCK) : CS(CS), MOSI(MOSI), MISO
 	x = 0;
 }
 
-void MCP335X::init() {
+void MCP335X::begin() {
 	SPI.begin();
 	SPI.setClockDivider(SPI_CLOCK_DIV64); // SPI clock rate < 5 MHz per MCP3550 spec
 	SPI.setBitOrder(MSBFIRST);            // MSB or LSB first
@@ -28,7 +28,7 @@ unsigned long MCP335X::readWord() {
 	return (w.longv);               // return unsigned long word
 }
 
-long MCP335X::readLong() {
+long MCP335X::read() {
 	digitalWrite(CS,HIGH);
 	delayMicroseconds(100);
 	digitalWrite(CS,LOW); // start next conversion

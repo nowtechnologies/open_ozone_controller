@@ -23,7 +23,7 @@ void initMenus(){
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Ozone level");
-  newItem->setAction(&ozoneAction);
+  newItem->setAction(&ozoneDisplayAction);
   mainMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Humidity level");
@@ -44,6 +44,10 @@ void initMenus(){
 
   // Settings Menu, whose parent menu is mainMenu
   settingsMenu = new LCDMenu("Settings Menu", LCD, mainMenu);
+
+  newItem = new LCDMenuItem("Calibrate O3");
+  newItem->setAction(&ozoneCalibrationAction);
+  settingsMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem("Set brightness");
   newItem->setAction(&brightnessAction);

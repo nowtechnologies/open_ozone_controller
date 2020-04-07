@@ -10,12 +10,14 @@
 #include <Storage.h>
 #include <Timer.h>
 #include <MCP335X.h>
+#include <MQ131.h>
 
 // Globals
 bool ozoneSensorPresent    = false;
 bool humiditySensorPresent = false;
 
-MCP335X ozoneSensor(chipSelect2, spiMOSI, spiMISO, spiSCK);
+MCP335X adc(chipSelect2, spiMOSI, spiMISO, spiSCK);
+MQ131   ozoneSensor(MQ131Model::HighConcentration, &adc);
 LiquidCrystal* LCD;
 LCDMenu* activeMenu;
 LCDMenu* mainMenu;
@@ -42,7 +44,7 @@ void initPorts(){
   pinMode(decomposerPin, OUTPUT); digitalWrite(decomposerPin, LOW);
   pinMode(humidifierPin, OUTPUT); digitalWrite(humidifierPin, LOW);
   pinMode(safeSignPin,   OUTPUT); digitalWrite(safeSignPin,   LOW);
-  pinMode(lcdBrightPin, OUTPUT);
+  pinMode(lcdBrightPin,  OUTPUT);
 }
 
 void initPeripherals(){
@@ -53,14 +55,16 @@ void initPeripherals(){
   LCD->begin(16,2);
   LCD->clear();
   analogWrite(lcdBrightPin, lcdBrightness);
-  ozoneSensor.init();
+  adc.begin();
+  ozoneSensor.begin();
+  ozoneSensor.calibrate();
 }
 
 void setup()
 {
   initPeripherals();
   initMenus();
-  initPorts(); // just to be on the safe side
+  initPorts();
 }
 
 void loop()
