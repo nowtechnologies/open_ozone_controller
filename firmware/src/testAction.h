@@ -1,18 +1,6 @@
 #ifndef _CONTROLLER_GENERATOR_ACTION_HEADER_
 #define _CONTROLLER_GENERATOR_ACTION_HEADER_
 
-enum peripherals{
-  generator,
-  blower,
-  decomposer,
-  humidifier,
-  lock
-};
-
-String  nameOfPeripherals[] = {"Ozone generator","Blower","Decomposer","Humidifier","Lock"};
-uint8_t portPin[] = {generatorPin, fanEnablePin, decomposerPin, humidifierPin, safeSignPin};
-bool    portEnabled[] = {false, false, false, false, false};
-
 void testAction(int p)
 {
   mainMenu->getLCD()->clear();

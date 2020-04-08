@@ -53,11 +53,47 @@
 		Storage::writeByte(thisByte, ROM_BRIGHT);
 	};
 
+	void Storage::storeKillLevel(uint8_t thisByte){
+		Storage::writeByte(thisByte, ROM_OZONE);
+	};
+
+	void Storage::storeDeconTime(uint8_t thisByte){
+		Storage::writeByte(thisByte, ROM_TIME);
+	};
+
+	void Storage::storeControlThreshold(uint8_t thisByte){
+		Storage::writeByte(thisByte, ROM_THRESH);
+	};
+
+	void Storage::storeLockInstalled(bool state){
+		Storage::writeByte(state?1:0, ROM_LOCK);
+	};
+
 	/// LOAD
 
 	uint8_t Storage::brightness(){
 		uint8_t value = Storage::readByte(ROM_BRIGHT);
 		return value;
+	};
+
+	uint8_t Storage::killLevel(){
+		uint8_t value = Storage::readByte(ROM_OZONE);
+		return value;
+	};
+
+	uint8_t Storage::deconTime(){
+		uint8_t value = Storage::readByte(ROM_TIME);
+		return value;
+	};
+
+	uint8_t Storage::controlThreshold(){
+		uint8_t value = Storage::readByte(ROM_THRESH);
+		return value;
+	};
+
+	bool Storage::lockInstalled(){
+		uint8_t value = Storage::readByte(ROM_LOCK);
+		return bool(value);
 	};
 
 	//////////////////////////////////////////
@@ -66,9 +102,14 @@
 
 	void Storage::storeDefaults(){
 		Storage::storeBrightness(255);
+		Storage::storeDeconTime(15);
+		Storage::storeKillLevel(25);
+		Storage::storeControlThreshold(5);
+		Storage::writeByte(STORAGE_REVISION, ROM_REV1);
+		Storage::writeByte(STORAGE_REVISION, ROM_REV2);
 	};
 
-	void Storage::initialize(){
+	void Storage::begin(){
 		uint8_t valid = STORAGE_REVISION * 2;
 		uint8_t check = Storage::readByte(ROM_REV1) + Storage::readByte(ROM_REV2);
 		if ( valid != check ) {

@@ -33,4 +33,13 @@ void holdUntilEscape()
   }
 }
 
+int waitForButtonPress()
+{
+  int buttonState = btnNONE;
+  while (buttonState == btnNONE) {
+      buttonState = read_LCD_buttons();
+  }
+  return buttonState;
+}
+
 #endif
