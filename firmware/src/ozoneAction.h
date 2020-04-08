@@ -1,4 +1,4 @@
-float getOzoneLevel(){
+float ozoneLevel(){
   if (SPIozoneSensorPresent)
   {
     ozoneSensor.read();
@@ -34,7 +34,9 @@ void ozoneDisplayAction()
           checkIncomingSerial();
           clearSecondLcdRow();
           mainMenu->getLCD()->print(sensorPacket.ozonePPM); // there are no threads !
-          mainMenu->getLCD()->print(F(" ppm"));
+          mainMenu->getLCD()->print(F(" ppm / "));
+          mainMenu->getLCD()->print(int(sensorPacket.temperature));
+          mainMenu->getLCD()->print(F("C"));
           delay(100);
         }
     }

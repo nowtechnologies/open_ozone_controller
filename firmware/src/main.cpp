@@ -54,8 +54,8 @@ bool    lockInstalled;
 #include "humidityAction.h"
 #include "settingsAction.h"
 #include "testAction.h"
-#include "processAction.h"
 #include "ozoneAction.h"
+#include "processAction.h"
 #include "mainMenu.h"
 
 void initPorts()
