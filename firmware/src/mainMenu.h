@@ -49,7 +49,7 @@ void initMenus(){
   newItem->setAction(&killLevelAction);
   settingsMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem(F("Set threshold"));
+  newItem = new LCDMenuItem(F("Set Threshold"));
   newItem->setAction(&controlThresholdAction);
   settingsMenu->addMenuItem(newItem);
 
@@ -61,7 +61,11 @@ void initMenus(){
   newItem->setAction(&lockInstalledAction);
   settingsMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem(F("Set brightness"));
+  newItem = new LCDMenuItem(F("Set UART Echo"));
+  newItem->setAction(&serialEchoAction);
+  settingsMenu->addMenuItem(newItem);
+
+  newItem = new LCDMenuItem(F("Set Brightness"));
   newItem->setAction(&brightnessAction);
   settingsMenu->addMenuItem(newItem);
 

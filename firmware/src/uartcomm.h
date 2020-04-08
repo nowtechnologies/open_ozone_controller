@@ -73,6 +73,7 @@ void checkIncomingSerial(){
   int count = Serial.available();
   while (count > 0) {
     uint8_t b = (uint8_t)Serial.read();
+    if (echoEnabled) Serial.write(b);
     append(b); // [2256 byte]
     count--;
   }

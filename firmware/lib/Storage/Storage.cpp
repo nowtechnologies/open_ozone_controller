@@ -69,6 +69,10 @@
 		Storage::writeByte(state?1:0, ROM_LOCK);
 	};
 
+	void Storage::storeEchoState(bool state){
+		Storage::writeByte(state?1:0, ROM_ECHO);
+	};
+
 	/// LOAD
 
 	uint8_t Storage::brightness(){
@@ -96,6 +100,11 @@
 		return bool(value);
 	};
 
+	bool Storage::serialEchoEnabled(){
+		uint8_t value = Storage::readByte(ROM_ECHO);
+		return bool(value);
+	};
+
 	//////////////////////////////////////////
 	//					  	 INITIALIZE						 //
 	////////////////////////////////////////
@@ -105,6 +114,8 @@
 		Storage::storeDeconTime(15);
 		Storage::storeKillLevel(25);
 		Storage::storeControlThreshold(5);
+		Storage::storeEchoState(true);
+		Storage::storeLockInstalled(false);
 		Storage::writeByte(STORAGE_REVISION, ROM_REV1);
 		Storage::writeByte(STORAGE_REVISION, ROM_REV2);
 	};

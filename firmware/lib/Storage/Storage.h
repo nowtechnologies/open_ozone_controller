@@ -1,7 +1,7 @@
 #ifndef __STORAGE_H__
 #define __STORAGE_H__
 
-#define STORAGE_REVISION 4
+#define STORAGE_REVISION 5
 	/*
 
 	Use only the first 512 bytes for compatibility with smaller AVRs.
@@ -20,6 +20,7 @@
 	#define ROM_TIME			34
 	#define ROM_LOCK			35
 	#define ROM_THRESH		36
+	#define ROM_ECHO			37
 
 	// lib
 	#define ROM_REV1 			62
@@ -39,6 +40,7 @@
 		void storeDeconTime (uint8_t thisValue);
 		void storeControlThreshold(uint8_t thisValue);
 		void storeLockInstalled(bool thisBool);
+		void storeEchoState(bool thisBool);
 
 		// load
 		uint8_t brightness();
@@ -46,6 +48,7 @@
 		uint8_t deconTime();
 		uint8_t	controlThreshold();
 		bool		lockInstalled();
+		bool		serialEchoEnabled();
 
 	private:
 

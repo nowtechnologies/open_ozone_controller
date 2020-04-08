@@ -202,7 +202,7 @@ void lockInstalledAction()
 {
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("Lock present?");
+  mainMenu->getLCD()->print(F("Lock present?"));
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(lockInstalled?"yes":"no");
   delay(500);
@@ -231,4 +231,36 @@ void lockInstalledAction()
   }
 }
 
+void serialEchoAction()
+{
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print(F("Enable echo?"));
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print(echoEnabled?"yes":"no");
+  delay(500);
+  int buttonState = btnNONE;
+  while (buttonState != btnLEFT) {
+      buttonState = read_LCD_buttons();
+      if (buttonState != lastButton)
+      {
+        switch (buttonState)
+        {
+        case btnDOWN :
+          echoEnabled = false;
+          break;
+        case btnUP :
+          echoEnabled = true;
+          break;
+        case btnRIGHT :
+          config.storeEchoState(echoEnabled);
+          displaySaved();
+          break;
+        }
+        lastButton = buttonState;
+        clearSecondLcdRow();
+        mainMenu->getLCD()->print(echoEnabled?"yes":"no");
+      }
+  }
+}
 #endif

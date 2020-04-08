@@ -11,7 +11,6 @@
 #include <Timer.h>
 #include <MCP335X.h>
 #include <MQ131.h>
-#include <uartcomm.h>
 
 // Globals
 bool SPIozoneSensorPresent    = false;
@@ -45,8 +44,10 @@ uint8_t killLevel;
 uint8_t lcdBrightness;
 uint8_t ctrlThreshold;
 bool    lockInstalled;
+bool    echoEnabled;
 
 // Lazy headers
+#include "uartcomm.h"
 #include "buttonUtils.h"
 #include "displayUtils.h"
 #include "timerAction.h"
@@ -76,6 +77,7 @@ void setup()
   killLevel = config.killLevel();
   ctrlThreshold = config.controlThreshold();
   lockInstalled = config.lockInstalled();
+  echoEnabled   = config.serialEchoEnabled();
   // Display
   lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);
