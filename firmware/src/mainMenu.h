@@ -41,8 +41,8 @@ void initMenus(){
   // Settings Menu, whose parent menu is mainMenu
   settingsMenu = new LCDMenu(F("Settings Menu"), LCD, mainMenu);
 
-  newItem = new LCDMenuItem(F("Set Decon Time"));
-  newItem->setAction(&deconTimeAction);
+  newItem = new LCDMenuItem(F("Calibration"));
+  newItem->setAction(&ozoneCalibrationAction);
   settingsMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem(F("Set Kill Level"));
@@ -53,13 +53,13 @@ void initMenus(){
   newItem->setAction(&controlThresholdAction);
   settingsMenu->addMenuItem(newItem);
 
+  newItem = new LCDMenuItem(F("Set Decon Time"));
+  newItem->setAction(&deconTimeAction);
+  settingsMenu->addMenuItem(newItem);
+
   newItem = new LCDMenuItem(F("Set Lock"));
   newItem->setAction(&lockInstalledAction);
   settingsMenu->addMenuItem(newItem);
-
-  // newItem = new LCDMenuItem("Calibrate O3");
-  // newItem->setAction(&ozoneCalibrationAction);
-  // settingsMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem(F("Set brightness"));
   newItem->setAction(&brightnessAction);

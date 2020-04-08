@@ -37,6 +37,7 @@ typedef struct {
 	float ozonePPM;
 	float temperature;
 	float humidity;
+	float ratio;
 } __PACKED SENSORPACK;
 
 #if PRAGMA_PACK_AVAILABLE
