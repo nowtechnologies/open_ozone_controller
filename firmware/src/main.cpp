@@ -43,6 +43,7 @@ bool    portEnabled[] = {false, false, false, false, false};
 uint8_t deconTime;
 uint8_t killLevel;
 uint8_t lcdBrightness;
+uint8_t ctrlThreshold;
 bool    lockInstalled;
 
 // Lazy headers
@@ -73,6 +74,7 @@ void setup()
   config.begin();
   deconTime = config.deconTime();
   killLevel = config.killLevel();
+  ctrlThreshold = config.controlThreshold();
   lockInstalled = config.lockInstalled();
   // Display
   lcdBrightness = config.brightness();
@@ -113,7 +115,6 @@ void loop()
       activeMenu->getLCD()->print(activeMenu->prev()->getName());
       break;
     case btnRIGHT :
-      // delay(100);
       activeMenu->selectOption();
 	  break;
 	  case btnLEFT :

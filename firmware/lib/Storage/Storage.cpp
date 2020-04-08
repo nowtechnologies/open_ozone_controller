@@ -61,6 +61,10 @@
 		Storage::writeByte(thisByte, ROM_TIME);
 	};
 
+	void Storage::storeControlThreshold(uint8_t thisByte){
+		Storage::writeByte(thisByte, ROM_THRESH);
+	};
+
 	void Storage::storeLockInstalled(bool state){
 		Storage::writeByte(state?1:0, ROM_LOCK);
 	};
@@ -82,6 +86,11 @@
 		return value;
 	};
 
+	uint8_t Storage::controlThreshold(){
+		uint8_t value = Storage::readByte(ROM_THRESH);
+		return value;
+	};
+
 	bool Storage::lockInstalled(){
 		uint8_t value = Storage::readByte(ROM_LOCK);
 		return bool(value);
@@ -95,6 +104,7 @@
 		Storage::storeBrightness(255);
 		Storage::storeDeconTime(15);
 		Storage::storeKillLevel(25);
+		Storage::storeControlThreshold(5);
 		Storage::writeByte(STORAGE_REVISION, ROM_REV1);
 		Storage::writeByte(STORAGE_REVISION, ROM_REV2);
 	};

@@ -15,18 +15,18 @@ void testAction() {
 void initMenus(){
 
   // Main menu
-  mainMenu = new LCDMenu("Main Menu", LCD);
+  mainMenu = new LCDMenu(F("Main Menu"), LCD);
   LCDMenuItem *newItem;
 
-  newItem = new LCDMenuItem("START !");
+  newItem = new LCDMenuItem(F("START !"));
   newItem->setAction(&processAction);
   mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Configure");
+  newItem = new LCDMenuItem(F("Configure"));
   newItem->setAction(&settingsAction);
   mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Ozone level");
+  newItem = new LCDMenuItem(F("Ozone level"));
   newItem->setAction(&ozoneDisplayAction);
   mainMenu->addMenuItem(newItem);
 
@@ -39,17 +39,21 @@ void initMenus(){
   // mainMenu->addMenuItem(newItem);
 
   // Settings Menu, whose parent menu is mainMenu
-  settingsMenu = new LCDMenu("Settings Menu", LCD, mainMenu);
+  settingsMenu = new LCDMenu(F("Settings Menu"), LCD, mainMenu);
 
-  newItem = new LCDMenuItem("Set Decon Time");
+  newItem = new LCDMenuItem(F("Set Decon Time"));
   newItem->setAction(&deconTimeAction);
   settingsMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Set Kill Level");
+  newItem = new LCDMenuItem(F("Set Kill Level"));
   newItem->setAction(&killLevelAction);
   settingsMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Set Lock");
+  newItem = new LCDMenuItem(F("Set threshold"));
+  newItem->setAction(&controlThresholdAction);
+  settingsMenu->addMenuItem(newItem);
+
+  newItem = new LCDMenuItem(F("Set Lock"));
   newItem->setAction(&lockInstalledAction);
   settingsMenu->addMenuItem(newItem);
 
@@ -57,38 +61,38 @@ void initMenus(){
   // newItem->setAction(&ozoneCalibrationAction);
   // settingsMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Set brightness");
+  newItem = new LCDMenuItem(F("Set brightness"));
   newItem->setAction(&brightnessAction);
   settingsMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem("Firmware info");
+  newItem = new LCDMenuItem(F("Firmware info"));
   newItem->setAction(&firmwareInfoAction);
   settingsMenu->addMenuItem(newItem);
 
 	// Test actuators
-  newItem = new LCDMenuItem("Test outputs");
+  newItem = new LCDMenuItem(F("Test outputs"));
 	newItem->setAction(&testAction);
 	mainMenu->addMenuItem(newItem);
 
-	testMenu = new LCDMenu("Test Menu", LCD, mainMenu);
+	testMenu = new LCDMenu(F("Test Menu"), LCD, mainMenu);
 
-	newItem = new LCDMenuItem("Test generator");
+	newItem = new LCDMenuItem(F("Test generator"));
   newItem->setAction(&generatorTestAction);
   testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test blower");
+	newItem = new LCDMenuItem(F("Test blower"));
 	newItem->setAction(&blowerTestAction);
 	testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test decomposer");
+	newItem = new LCDMenuItem(F("Test decomposer"));
 	newItem->setAction(&decomposerTestAction);
 	testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test humidifier");
+	newItem = new LCDMenuItem(F("Test humidifier"));
   newItem->setAction(&humidifierTestAction);
   testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test lock");
+	newItem = new LCDMenuItem(F("Test lock"));
   newItem->setAction(&lockTestAction);
   testMenu->addMenuItem(newItem);
 
