@@ -55,7 +55,7 @@ void deconTimeAction()
 //  if (settingsAction(&deconTime,"DeconTime:"," min")) config.storeDeconTime(deconTime);
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("Decon. Time:");
+  mainMenu->getLCD()->print(F("Decon. Time:"));
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(deconTime);
   mainMenu->getLCD()->print(" min");
@@ -88,11 +88,85 @@ void deconTimeAction()
   }
 }
 
+void generatorCapacityAction()
+{
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print(F("Gen. Capacity:"));
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print(generatorCapacity);
+  mainMenu->getLCD()->print(" mg/h");
+  delay(500);
+  int buttonState = btnNONE;
+  while (buttonState != btnLEFT) {
+      buttonState = read_LCD_buttons();
+      if (buttonState != lastButton)
+      {
+        switch (buttonState)
+        {
+        case btnDOWN :
+          generatorCapacity-100;
+          if (generatorCapacity < 0 ) generatorCapacity = 0;
+          break;
+        case btnUP :
+          chamberVolume+=100;
+          if (generatorCapacity > 10000 ) generatorCapacity = 10000;
+          break;
+        case btnRIGHT :
+          config.storeGeneratorCapacity(generatorCapacity);
+          displaySaved();
+          break;
+        }
+        lastButton = buttonState;
+        clearSecondLcdRow();
+        mainMenu->getLCD()->print(generatorCapacity);
+        mainMenu->getLCD()->print(" mg/h");
+      }
+  }
+} 
+
+ void chamberVolumeAction()
+{
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print(F("Chamber volume:"));
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print(chamberVolume);
+  mainMenu->getLCD()->print(" liter");
+  delay(500);
+  int buttonState = btnNONE;
+  while (buttonState != btnLEFT) {
+      buttonState = read_LCD_buttons();
+      if (buttonState != lastButton)
+      {
+        switch (buttonState)
+        {
+        case btnDOWN :
+          chamberVolume-=10;
+          if (chamberVolume < 0 ) chamberVolume = 0;
+          break;
+        case btnUP :
+          chamberVolume+=10;
+          if (chamberVolume > 5000 ) chamberVolume = 5000;
+          break;
+        case btnRIGHT :
+          config.storeChamberVolume(chamberVolume);
+          displaySaved();
+          break;
+        }
+        lastButton = buttonState;
+        clearSecondLcdRow();
+        mainMenu->getLCD()->print(chamberVolume);
+        mainMenu->getLCD()->print(" liter");
+      }
+  }
+} 
+
 void killLevelAction()
 {
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("O3 Kill Level:");
+  mainMenu->getLCD()->print(F("O3 Kill Level:"));
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(killLevel);
   mainMenu->getLCD()->print(" ppm");
@@ -129,7 +203,7 @@ void controlThresholdAction()
 {
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("Threshold:");
+  mainMenu->getLCD()->print(F("Threshold:"));
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(ctrlThreshold);
   mainMenu->getLCD()->print(" ppm");
@@ -166,7 +240,7 @@ void brightnessAction()
 {
   mainMenu->getLCD()->clear();
   mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("LCD brightness:");
+  mainMenu->getLCD()->print(F("LCD brightness:"));
   mainMenu->getLCD()->setCursor(0,1);
   mainMenu->getLCD()->print(lcdBrightness);
   delay(500);

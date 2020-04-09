@@ -45,6 +45,14 @@ void initMenus(){
   newItem->setAction(&ozoneCalibrationAction);
   settingsMenu->addMenuItem(newItem);
 
+  newItem = new LCDMenuItem(F("Set Volume"));
+  newItem->setAction(&chamberVolumeAction);
+  settingsMenu->addMenuItem(newItem);
+
+  newItem = new LCDMenuItem(F("Set Capacity"));
+  newItem->setAction(&generatorCapacityAction);
+  settingsMenu->addMenuItem(newItem);
+
   newItem = new LCDMenuItem(F("Set Kill Level"));
   newItem->setAction(&killLevelAction);
   settingsMenu->addMenuItem(newItem);
@@ -80,23 +88,23 @@ void initMenus(){
 
 	testMenu = new LCDMenu(F("Test Menu"), LCD, mainMenu);
 
-	newItem = new LCDMenuItem(F("Test generator"));
+	newItem = new LCDMenuItem("Test generator");
   newItem->setAction(&generatorTestAction);
   testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem(F("Test blower"));
+	newItem = new LCDMenuItem("Test blower");
 	newItem->setAction(&blowerTestAction);
 	testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem(F("Test decomposer"));
+	newItem = new LCDMenuItem("Test decomposer");
 	newItem->setAction(&decomposerTestAction);
 	testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem(F("Test humidifier"));
+	newItem = new LCDMenuItem("Test humidifier");
   newItem->setAction(&humidifierTestAction);
   testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem(F("Test lock"));
+	newItem = new LCDMenuItem("Test lock");
   newItem->setAction(&lockTestAction);
   testMenu->addMenuItem(newItem);
 
