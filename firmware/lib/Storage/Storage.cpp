@@ -73,6 +73,14 @@
 		Storage::writeByte(state?1:0, ROM_ECHO);
 	};
 
+	void Storage::storeChamberVolume(int thisValue){
+		Storage::writeInt(thisValue, ROM_CHAMVOL);
+	};
+
+	void Storage::storeGeneratorCapacity(int thisValue){
+		Storage::writeInt(thisValue, ROM_GENCAP);
+	};
+
 	/// LOAD
 
 	uint8_t Storage::brightness(){
@@ -105,17 +113,29 @@
 		return bool(value);
 	};
 
+	int Storage::chamberVolume(){
+		uint16_t value = Storage::readInt(ROM_CHAMVOL);
+		return value;
+	};
+
+	int Storage::generatorCapacity(){
+		uint16_t value = Storage::readInt(ROM_GENCAP);
+		return value;
+	};
+
 	//////////////////////////////////////////
 	//					  	 INITIALIZE						 //
 	////////////////////////////////////////
 
 	void Storage::storeDefaults(){
-		Storage::storeBrightness(255);
-		Storage::storeDeconTime(15);
-		Storage::storeKillLevel(25);
-		Storage::storeControlThreshold(5);
+		Storage::storeBrightness(255); // pwm
+		Storage::storeDeconTime(15); // min
+		Storage::storeKillLevel(25); // ppm
+		Storage::storeControlThreshold(5); // ppm
 		Storage::storeEchoState(true);
 		Storage::storeLockInstalled(false);
+		Storage::storeChamberVolume(100); // liter
+		Storage::storeGeneratorCapacity(5000); // mg/h
 		Storage::writeByte(STORAGE_REVISION, ROM_REV1);
 		Storage::writeByte(STORAGE_REVISION, ROM_REV2);
 	};

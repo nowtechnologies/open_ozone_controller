@@ -39,12 +39,14 @@ uint8_t portPin[] = {generatorPin, fanEnablePin, decomposerPin, humidifierPin, s
 bool    portEnabled[] = {false, false, false, false, false};
 
 // Stored variables
-uint8_t deconTime;
-uint8_t killLevel;
-uint8_t lcdBrightness;
-uint8_t ctrlThreshold;
-bool    lockInstalled;
-bool    echoEnabled;
+uint8_t  deconTime;
+uint8_t  killLevel;
+uint8_t  lcdBrightness;
+uint8_t  ctrlThreshold;
+bool     lockInstalled;
+bool     echoEnabled;
+uint16_t generatorCapacity;
+uint16_t chamberVolume;
 
 // Lazy headers
 #include "uartcomm.h"
@@ -78,6 +80,9 @@ void setup()
   ctrlThreshold = config.controlThreshold();
   lockInstalled = config.lockInstalled();
   echoEnabled   = config.serialEchoEnabled();
+  chamberVolume = config.chamberVolume();
+  generatorCapacity = config.generatorCapacity();
+
   // Display
   lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);

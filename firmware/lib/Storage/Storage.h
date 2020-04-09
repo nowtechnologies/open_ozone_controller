@@ -1,12 +1,7 @@
 #ifndef __STORAGE_H__
 #define __STORAGE_H__
 
-#define STORAGE_REVISION 5
-	/*
-
-	Use only the first 512 bytes for compatibility with smaller AVRs.
-
-	*/
+#define STORAGE_REVISION 6
 
 	#include "Arduino.h"
 	#include "EEPROM.h"
@@ -21,6 +16,8 @@
 	#define ROM_LOCK			35
 	#define ROM_THRESH		36
 	#define ROM_ECHO			37
+	#define ROM_GENCAP		38
+	#define ROM_CHAMVOL		40
 
 	// lib
 	#define ROM_REV1 			62
@@ -41,12 +38,16 @@
 		void storeControlThreshold(uint8_t thisValue);
 		void storeLockInstalled(bool thisBool);
 		void storeEchoState(bool thisBool);
+		void storeGeneratorCapacity(int thisValue);
+		void storeChamberVolume(int thisValue);
 
 		// load
 		uint8_t brightness();
 		uint8_t killLevel();
 		uint8_t deconTime();
 		uint8_t	controlThreshold();
+		int			generatorCapacity();
+		int 		chamberVolume();
 		bool		lockInstalled();
 		bool		serialEchoEnabled();
 

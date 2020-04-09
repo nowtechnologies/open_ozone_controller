@@ -8,6 +8,15 @@ void updatePorts()
   }
 }
 
+uint32_t generatorPulseLength()
+{
+  float volume = chamberVolume/1000.0f; // m^3
+  float concentration = killLevel/467.0f; // g/m^3
+  float requiredMass  = concentration*volume; // g
+  float productPerSec = generatorCapacity/3600; // g/s
+  return round((requiredMass/productPerSec)*1000); // millis
+}
+
 void processAction()
 {
   int buttonState = btnNONE;
@@ -67,9 +76,21 @@ void processAction()
         buttonState = read_LCD_buttons();
 
         if (ozoneMonitorConnected) checkIncomingSerial(); // check for new packets
-        if (ozoneLevel() > killLevel + ctrlThreshold) portEnabled[generator] = false;
-        if (ozoneLevel() < killLevel - ctrlThreshold) portEnabled[generator] = true;
-        updatePorts();
+        if (ozoneLevel() > killLevel + ctrlThreshold)
+        {
+          portEnabled[generator] = false;
+          updatePorts();
+        }
+        if (ozoneLevel() < killLevel - ctrlThreshold)
+        {
+          // turn generator on for a fraction of required time
+          portEnabled[generator] = true;
+          updatePorts();
+          delay(generatorPulseLength()/10); // 1/10 ?
+          portEnabled[generator] = false;
+          updatePorts();
+          delay(1000);
+        }
 
         if (timer.poll()) break;
         uint32_t secondsRemaining = round(timer.TimeRemaining()/1000);
