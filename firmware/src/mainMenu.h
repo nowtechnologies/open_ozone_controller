@@ -88,23 +88,23 @@ void initMenus(){
 
 	testMenu = new LCDMenu(F("Test Menu"), LCD, mainMenu);
 
-	newItem = new LCDMenuItem("Test generator");
+	newItem = new LCDMenuItem(F("Test generator"));
   newItem->setAction(&generatorTestAction);
   testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test blower");
+	newItem = new LCDMenuItem(F("Test blower"));
 	newItem->setAction(&blowerTestAction);
 	testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test decomposer");
+	newItem = new LCDMenuItem(F("Test decomposer"));
 	newItem->setAction(&decomposerTestAction);
 	testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test humidifier");
+	newItem = new LCDMenuItem(F("Test humidifier"));
   newItem->setAction(&humidifierTestAction);
   testMenu->addMenuItem(newItem);
 
-	newItem = new LCDMenuItem("Test lock");
+	newItem = new LCDMenuItem(F("Test lock"));
   newItem->setAction(&lockTestAction);
   testMenu->addMenuItem(newItem);
 
