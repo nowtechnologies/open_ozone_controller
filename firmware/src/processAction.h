@@ -3,82 +3,49 @@
 
 Timer restTimer;
 
-void updatePorts()
-{
-  for (uint8_t p=0; p<5; p++){
-    digitalWrite(portPin[p], portEnabled[p]);
-  }
-}
-
-uint32_t generatorPulseLength()
-{
-  float concentration = killLevel/467.0f; // g/m^3 def: 0.05
-  float requiredMass  = concentration*chamberVolume; // mg def: 5
-  float productPerSec = generatorCapacity/3600; // mg/s def: 1.38
-  return round((requiredMass/productPerSec)*1000); // millis
-}
-
 void processAction()
 {
   int buttonState = btnNONE;
 
+  // check wheter we can start the process
   if (ozoneMonitorConnected && int(sensorPacket.temperature)==0)
   {
-    mainMenu->getLCD()->clear();
-    mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print(F("WARNING!"));
-    mainMenu->getLCD()->setCursor(0,1);
-    mainMenu->getLCD()->print(F("Sensor Failure"));
+    displayWarning(F("Sensor Failure"));
     holdUntilEscape();
   }
   else if (!ozoneMonitorConnected && !SPIozoneSensorPresent)
   {
-    mainMenu->getLCD()->clear();
-    mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print(F("WARNING!"));
-    mainMenu->getLCD()->setCursor(0,1);
-    mainMenu->getLCD()->print(F("No sensors"));
+    displayWarning(F("No sensors"));
     holdUntilEscape();
   }
+  // if there is an ozone sensor ask for confirmation
   else
   {
-    mainMenu->getLCD()->clear();
-    mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print(F("Start process?"));
-    mainMenu->getLCD()->setCursor(0,1);
-    mainMenu->getLCD()->print(F("No   Yes"));
+    displayInfo(F("Start process?"),F("No   Yes"));
     delay(200);
+    if (waitForButtonPress() == btnRIGHT){ // yes !!!
 
-    if (waitForButtonPress() == btnRIGHT){ // yes
       // LOCKING DOOR
       if (lockInstalled){
-        mainMenu->getLCD()->clear();
-        mainMenu->getLCD()->setCursor(0,0);
-        mainMenu->getLCD()->print(F("Locking door..."));
+        displayInfo(F("Locking door..."));
         portEnabled[lock]=true;
         delay(2000); // e.g.
         updatePorts();
       }
 
-      for (uint8_t p=0; p<5; p++){
-        portEnabled[p]=false;
-      }
-      updatePorts();
+      // clear port states and disable all peripherals
+      shutDownPeripherals();
 
       // FLOODING CHAMBER WITH OZONE GAS
-      mainMenu->getLCD()->clear();
-      mainMenu->getLCD()->setCursor(0,0);
-      mainMenu->getLCD()->print(F("Flooding chamber"));
-      mainMenu->getLCD()->setCursor(0,1);
-      mainMenu->getLCD()->print(F("with ozone..."));
-      portEnabled[blower] = true;
+      displayInfo(F("Flooding chamber"),F("with ozone..."));
+      portEnabled[blower] = true; // turn fan ON
       updatePorts();
-      delay(2000);
-      uint32_t milliseconds = deconTime*60000;
+      delay(2000); // wait for the user to read the message
+      uint32_t milliseconds = deconTime*60000; // minutes to millis
       timer.set(milliseconds);
-      bool genAllowed = true;
+      bool genAllowed = true; // allow generator to be turned on
 
-      while ( buttonState != btnLEFT )
+      while ( buttonState != btnLEFT ) // do until user escape or timer break
       {
         buttonState = read_LCD_buttons();
 
@@ -100,7 +67,7 @@ void processAction()
         }
 
         if (restTimer.poll()) genAllowed = true; // re-allow generation
-        if (timer.poll()) break;
+        if (timer.poll()) break; // time is up, exit the ozone loop
         uint32_t secondsRemaining = round(timer.TimeRemaining()/1000);
         if (lastTime != secondsRemaining)
         {
@@ -116,14 +83,10 @@ void processAction()
       }
 
       // DECONTAMINATION
-      mainMenu->getLCD()->clear();
-      mainMenu->getLCD()->setCursor(0,0);
-      mainMenu->getLCD()->print(F("O3 destruction"));
-      mainMenu->getLCD()->setCursor(0,1);
-      mainMenu->getLCD()->print(F("in progress..."));
-      portEnabled[generator]  = false;
-      portEnabled[decomposer] = true;
-      buttonState = btnNONE;
+      buttonState = btnNONE; // clear button state
+      displayInfo(F("O3 destruction"),F("in progress..."));
+      portEnabled[generator]  = false; // disable generation
+      portEnabled[decomposer] = true;  // enable destruction
       updatePorts();
       delay(2000);
       while ( buttonState != btnLEFT )
@@ -139,17 +102,16 @@ void processAction()
           mainMenu->getLCD()->print(F("PPM: "));
           mainMenu->getLCD()->print(ozoneLevel());
         }
-        if (ozoneLevel()<=9.0) break; // !!! needs a low concentration sensor
+        if (ozoneLevel()<=9.0) break; // <-- WARNING: THIS SHOULD BE 3.0 !!!
+        // IN ORDER TO MAKE THIS SAFE, WE NEED A MORE PRECISE SENSOR
       }
       portEnabled[decomposer] = false;
       portEnabled[blower]     = false;
-      updatePorts();
+      updatePorts(); // turn off everything
 
       // OPENING DOOR
       if (lockInstalled){
-        mainMenu->getLCD()->clear();
-        mainMenu->getLCD()->setCursor(0,0);
-        mainMenu->getLCD()->print(F("Opening door..."));
+        displayInfo(F("Opening door..."));
         portEnabled[lock] = false;
         delay(2000);
         updatePorts();

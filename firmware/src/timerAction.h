@@ -3,13 +3,10 @@ uint32_t lastTime = 0;
 void timerAction(){
   int buttonState = btnNONE;
   uint16_t timerSeconds = 10;
-  boolean timerStarted = false;
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print("Start timer: ");
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(timerSeconds);
-  mainMenu->getLCD()->print(" sec");
+  boolean timerStarted  = false;
+  displayTopic(F("Start timer: "));
+  displayValue(timerSeconds,F("sec"));
+  shutDownPeripherals();
 
   while (buttonState != btnLEFT) {
 
@@ -29,17 +26,14 @@ void timerAction(){
         case btnRIGHT :
             timer.set(timerSeconds*1000);
             timerStarted = true;
-            mainMenu->getLCD()->clear();
-            mainMenu->getLCD()->setCursor(0,0);
-            mainMenu->getLCD()->print("Time left: ");
-
-            digitalWrite(generatorPin, HIGH);
+            displayTopic(F("Time left:"));
+            portEnabled[generator] = true;
+            portEnabled[blower] = true;
+            updatePorts();
         break;
         }
         lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(timerSeconds);
-        mainMenu->getLCD()->print(" sec");
+        displayValue(timerSeconds,F("sec"));
       }
 
       if (timerStarted)
@@ -47,16 +41,17 @@ void timerAction(){
         uint32_t remaining = round(timer.TimeRemaining()/1000);
         if (!timer.poll() && lastTime != remaining)
         {
-          clearSecondLcdRow();
-          mainMenu->getLCD()->print(remaining);
-          mainMenu->getLCD()->print(" sec");
+          displayValue(remaining,F("sec"));
           lastTime = remaining;
         }
         if (timer.poll()) {
-          digitalWrite(generatorPin, LOW);
+          portEnabled[generator] = false;
+          portEnabled[blower] = false;
+          updatePorts();
+          break;
         }
       }
 
   }
-  digitalWrite(generatorPin, LOW);
+  shutDownPeripherals(); // just to be on the safe side
 }

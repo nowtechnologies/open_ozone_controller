@@ -49,15 +49,16 @@ uint16_t generatorCapacity;
 uint16_t chamberVolume;
 
 // Lazy headers
+#include "peripherals.h"
 #include "uartcomm.h"
 #include "buttonUtils.h"
 #include "displayUtils.h"
-#include "timerAction.h"
 #include "fwInfoAction.h"
 #include "humidityAction.h"
 #include "settingsAction.h"
 #include "testAction.h"
 #include "ozoneAction.h"
+#include "timerAction.h"
 #include "processAction.h"
 #include "mainMenu.h"
 
@@ -130,7 +131,7 @@ void loop()
   	  }
 	  break;
     case btnTIMER :
-      // timerAction();
+      timerAction();
       break;
     }
     if (buttonState != btnNONE) activeMenu->display();

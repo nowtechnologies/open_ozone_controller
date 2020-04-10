@@ -39,6 +39,18 @@ void displayChoice(bool choice)
   mainMenu->getLCD()->print(choice?"yes":"no");
 }
 
+void displayInfo(String firstRow, String secondRow = NULL){
+  mainMenu->getLCD()->clear();
+  mainMenu->getLCD()->setCursor(0,0);
+  mainMenu->getLCD()->print(firstRow);
+  mainMenu->getLCD()->setCursor(0,1);
+  mainMenu->getLCD()->print(secondRow);
+}
+
+void displayWarning(String warning){
+  displayInfo(F("WARNING!"),warning);
+}
+
 // void displayPOST(){
 //   mainMenu->getLCD()->clear();
 //   mainMenu->getLCD()->setCursor(0,0);

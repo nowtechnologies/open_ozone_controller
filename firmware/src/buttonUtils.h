@@ -30,6 +30,7 @@ void holdUntilEscape()
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
       buttonState = read_LCD_buttons();
+      if (ozoneMonitorConnected) checkIncomingSerial();
   }
 }
 
