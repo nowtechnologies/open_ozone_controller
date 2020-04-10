@@ -37,7 +37,7 @@
 		void storeDeconTime (uint8_t thisValue);
 		void storeControlThreshold(uint8_t thisValue);
 		void storeLockInstalled(bool thisBool);
-		void storeEchoState(bool thisBool);
+		void storeLogState(bool thisBool);
 		void storeGeneratorCapacity(int thisValue);
 		void storeChamberVolume(int thisValue);
 
@@ -49,7 +49,7 @@
 		int			generatorCapacity();
 		int 		chamberVolume();
 		bool		lockInstalled();
-		bool		serialEchoEnabled();
+		bool		serialLogEnabled();
 
 	private:
 

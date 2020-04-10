@@ -8,6 +8,8 @@
 RingBuffer serialBuffer(UART_BUFFER_SIZE);
 UARTHEADER packetHeader;
 SENSORPACK sensorPacket;
+GPIOS      internal;
+LOG        logData;
 bool ozoneMonitorConnected = false;
 
 void process(const UARTHEADER &header, RingBuffer &buffer) {
@@ -73,7 +75,6 @@ void checkIncomingSerial(){
   int count = Serial.available();
   while (count > 0) {
     uint8_t b = (uint8_t)Serial.read();
-    if (echoEnabled) Serial.write(b);
     append(b); // [2256 byte]
     count--;
   }
@@ -98,4 +99,13 @@ void send(uint8_t pid, const void *data, size_t length) {
 	uint16_t crc = crc16(data, 0, length);
 	Serial.write((uint8_t)(crc & 0x00ff)); // LSB
 	Serial.write((uint8_t)((crc & 0xff00) >> 8)); // MSB
+}
+
+void sendLog(){
+  if (LogEnabled)
+  {
+    logData.sensor = sensorPacket;
+    logData.status = internal.state.value;
+    send(PID_LOG, &logData, sizeof(LOG));
+  }
 }

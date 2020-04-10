@@ -1,18 +1,10 @@
 #ifndef _CONTROLLER_SETTINGS_ACTION_HEADER_
 #define _CONTROLLER_SETTINGS_ACTION_HEADER_
 
-// TODO: refactor
-
-/*
-bool settingsAction(uint8_t *value, String topic, String unit)
+int settingsAction(uint16_t value, uint8_t stepSize, uint16_t maxValue, String topic, String unit = NULL)
 {
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(topic);
-  mainMenu->getLCD()->setCursor(0,1);
-  uint8_t vp = value;
-  mainMenu->getLCD()->print(vp);
-  mainMenu->getLCD()->print(unit);
+  displayTopic(topic);
+  displayValue(value, unit);
   delay(500);
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
@@ -22,43 +14,31 @@ bool settingsAction(uint8_t *value, String topic, String unit)
         switch (buttonState)
         {
         case btnDOWN :
-          value--;
+          value-=stepSize;
           if (value < 0 ) value = 0;
           break;
         case btnUP :
-          value++;
-          if (value > 255 ) value = 255;
+          value+=stepSize;
+          if (value > maxValue ) value = maxValue;
           break;
         case btnRIGHT :
-          clearSecondLcdRow();
-          uint8_t vp = value;
-          mainMenu->getLCD()->print(vp);
-          mainMenu->getLCD()->print(unit);
           displaySaved();
-          delay(500);
-          return true;
+          displayValue(value, unit);
+          delay(1000);
+          return value;
           break;
         }
         lastButton = buttonState;
-        clearSecondLcdRow();
-        uint8_t vp = value;
-        mainMenu->getLCD()->print(vp);
-        mainMenu->getLCD()->print(unit);
+        displayValue(value, unit);
       }
   }
-  return false;
+  return -1;
 }
-*/
 
-void deconTimeAction()
+int choiceAction(bool choice, String topic)
 {
-//  if (settingsAction(&deconTime,"DeconTime:"," min")) config.storeDeconTime(deconTime);
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(F("Decon. Time:"));
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(deconTime);
-  mainMenu->getLCD()->print(" min");
+  displayTopic(topic);
+  displayChoice(choice);
   delay(500);
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
@@ -68,273 +48,94 @@ void deconTimeAction()
         switch (buttonState)
         {
         case btnDOWN :
-          deconTime--;
-          if (deconTime < 0 ) deconTime = 0;
+          choice = false;
           break;
         case btnUP :
-          deconTime++;
-          if (deconTime > 255 ) deconTime = 255;
+          choice = true;
           break;
         case btnRIGHT :
-          config.storeDeconTime(deconTime);
           displaySaved();
+          displayChoice(choice);
+          delay(1000);
+          return choice;
           break;
         }
         lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(deconTime);
-        mainMenu->getLCD()->print(" min");
+        displayChoice(choice);
       }
+  }
+  return -1;
+}
+
+void deconTimeAction()
+{
+  int v = settingsAction(deconTime, 1, 255, F("Decon. Time:"), F("min"));
+  if (v>0) {
+    deconTime = v;
+    config.storeDeconTime(deconTime);
   }
 }
 
 void generatorCapacityAction()
 {
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(F("Gen. Capacity:"));
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(generatorCapacity);
-  mainMenu->getLCD()->print(" mg/h");
-  delay(500);
-  int buttonState = btnNONE;
-  while (buttonState != btnLEFT) {
-      buttonState = read_LCD_buttons();
-      if (buttonState != lastButton)
-      {
-        switch (buttonState)
-        {
-        case btnDOWN :
-          generatorCapacity-100;
-          if (generatorCapacity < 0 ) generatorCapacity = 0;
-          break;
-        case btnUP :
-          chamberVolume+=100;
-          if (generatorCapacity > 10000 ) generatorCapacity = 10000;
-          break;
-        case btnRIGHT :
-          config.storeGeneratorCapacity(generatorCapacity);
-          displaySaved();
-          break;
-        }
-        lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(generatorCapacity);
-        mainMenu->getLCD()->print(" mg/h");
-      }
+  int v = settingsAction(generatorCapacity, 100, 10000, F("Gen. Capacity:"), F("mg/h"));
+  if (v>0) {
+    generatorCapacity = v;
+    config.storeGeneratorCapacity(generatorCapacity);
   }
-} 
+}
 
- void chamberVolumeAction()
+void chamberVolumeAction()
 {
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(F("Chamber volume:"));
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(chamberVolume);
-  mainMenu->getLCD()->print(" liter");
-  delay(500);
-  int buttonState = btnNONE;
-  while (buttonState != btnLEFT) {
-      buttonState = read_LCD_buttons();
-      if (buttonState != lastButton)
-      {
-        switch (buttonState)
-        {
-        case btnDOWN :
-          chamberVolume-=10;
-          if (chamberVolume < 0 ) chamberVolume = 0;
-          break;
-        case btnUP :
-          chamberVolume+=10;
-          if (chamberVolume > 5000 ) chamberVolume = 5000;
-          break;
-        case btnRIGHT :
-          config.storeChamberVolume(chamberVolume);
-          displaySaved();
-          break;
-        }
-        lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(chamberVolume);
-        mainMenu->getLCD()->print(" liter");
-      }
+  int v = settingsAction(chamberVolume, 10, 1000, F("Chamber volume:"), F("liter"));
+  if (v>0) {
+    chamberVolume = v;
+    config.storeChamberVolume(chamberVolume);
   }
-} 
+}
 
 void killLevelAction()
 {
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(F("O3 Kill Level:"));
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(killLevel);
-  mainMenu->getLCD()->print(" ppm");
-  delay(500);
-  int buttonState = btnNONE;
-  while (buttonState != btnLEFT) {
-      buttonState = read_LCD_buttons();
-      if (buttonState != lastButton)
-      {
-        switch (buttonState)
-        {
-        case btnDOWN :
-          killLevel--;
-          if (killLevel < 0 ) killLevel = 0;
-          break;
-        case btnUP :
-          killLevel++;
-          if (killLevel > 255 ) killLevel = 255;
-          break;
-        case btnRIGHT :
-          config.storeKillLevel(killLevel);
-          displaySaved();
-          break;
-        }
-        lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(killLevel);
-        mainMenu->getLCD()->print(" ppm");
-      }
+  int v = settingsAction(killLevel, 1, 255, F("O3 Kill Level:"), F("ppm"));
+  if (v>0) {
+    killLevel = v;
+    config.storeKillLevel(killLevel);
   }
 }
 
 void controlThresholdAction()
 {
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(F("Threshold:"));
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(ctrlThreshold);
-  mainMenu->getLCD()->print(" ppm");
-  delay(500);
-  int buttonState = btnNONE;
-  while (buttonState != btnLEFT) {
-      buttonState = read_LCD_buttons();
-      if (buttonState != lastButton)
-      {
-        switch (buttonState)
-        {
-        case btnDOWN :
-          ctrlThreshold--;
-          if (ctrlThreshold < 0 ) ctrlThreshold = 0;
-          break;
-        case btnUP :
-          ctrlThreshold++;
-          if (ctrlThreshold > 255 ) ctrlThreshold = 255;
-          break;
-        case btnRIGHT :
-          config.storeKillLevel(ctrlThreshold);
-          displaySaved();
-          break;
-        }
-        lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(ctrlThreshold);
-        mainMenu->getLCD()->print(" ppm");
-      }
+  int v = settingsAction(ctrlThreshold, 1, 255, F("Threshold:"), F("ppm"));
+  if (v>0) {
+    ctrlThreshold = v;
+    config.storeControlThreshold(ctrlThreshold);
   }
 }
 
 void brightnessAction()
 {
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(F("LCD brightness:"));
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(lcdBrightness);
-  delay(500);
-  int buttonState = btnNONE;
-  while (buttonState != btnLEFT) {
-      buttonState = read_LCD_buttons();
-      if (buttonState != lastButton)
-      {
-        switch (buttonState)
-        {
-        case btnDOWN :
-          lcdBrightness-=10;
-          if (lcdBrightness < 0 ) lcdBrightness = 0;
-          break;
-        case btnUP :
-          lcdBrightness+=10;
-          if (lcdBrightness > 255 ) lcdBrightness = 255;
-          break;
-        case btnRIGHT :
-          config.storeBrightness(lcdBrightness);
-          displaySaved();
-          break;
-        }
-        lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(lcdBrightness);
-        analogWrite(lcdBrightPin, lcdBrightness);
-      }
+  int v = settingsAction(lcdBrightness, 1, 255, F("LCD brightness:"), F("pwm"));
+  if (v>0) {
+    lcdBrightness = v;
+    config.storeBrightness(lcdBrightness);
   }
 }
 
 void lockInstalledAction()
 {
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(F("Lock present?"));
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(lockInstalled?"yes":"no");
-  delay(500);
-  int buttonState = btnNONE;
-  while (buttonState != btnLEFT) {
-      buttonState = read_LCD_buttons();
-      if (buttonState != lastButton)
-      {
-        switch (buttonState)
-        {
-        case btnDOWN :
-          lockInstalled = false;
-          break;
-        case btnUP :
-          lockInstalled = true;
-          break;
-        case btnRIGHT :
-          config.storeLockInstalled(lockInstalled);
-          displaySaved();
-          break;
-        }
-        lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(lockInstalled?"yes":"no");
-      }
+  int v = choiceAction(lockInstalled, F("Lock present?"));
+  if (v>-1) {
+    lockInstalled = bool(v);
+    config.storeLockInstalled(lockInstalled);
   }
 }
 
-void serialEchoAction()
-{
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(F("Enable echo?"));
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(echoEnabled?"yes":"no");
-  delay(500);
-  int buttonState = btnNONE;
-  while (buttonState != btnLEFT) {
-      buttonState = read_LCD_buttons();
-      if (buttonState != lastButton)
-      {
-        switch (buttonState)
-        {
-        case btnDOWN :
-          echoEnabled = false;
-          break;
-        case btnUP :
-          echoEnabled = true;
-          break;
-        case btnRIGHT :
-          config.storeEchoState(echoEnabled);
-          displaySaved();
-          break;
-        }
-        lastButton = buttonState;
-        clearSecondLcdRow();
-        mainMenu->getLCD()->print(echoEnabled?"yes":"no");
-      }
+void serialLogAction(){
+  int v = choiceAction(LogEnabled, F("Enable log?"));
+  if (v>-1) {
+    LogEnabled = bool(v);
+    config.storeLogState(LogEnabled);
   }
 }
+
 #endif

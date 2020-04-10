@@ -44,7 +44,7 @@ uint8_t  killLevel;
 uint8_t  lcdBrightness;
 uint8_t  ctrlThreshold;
 bool     lockInstalled;
-bool     echoEnabled;
+bool     LogEnabled;
 uint16_t generatorCapacity;
 uint16_t chamberVolume;
 
@@ -79,7 +79,7 @@ void setup()
   killLevel = config.killLevel();
   ctrlThreshold = config.controlThreshold();
   lockInstalled = config.lockInstalled();
-  echoEnabled   = config.serialEchoEnabled();
+  LogEnabled   = config.serialLogEnabled();
   chamberVolume = config.chamberVolume();
   generatorCapacity = config.generatorCapacity();
 

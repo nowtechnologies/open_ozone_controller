@@ -69,8 +69,8 @@ void initMenus(){
   newItem->setAction(&lockInstalledAction);
   settingsMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem(F("Set UART Echo"));
-  newItem->setAction(&serialEchoAction);
+  newItem = new LCDMenuItem(F("Enable log"));
+  newItem->setAction(&serialLogAction);
   settingsMenu->addMenuItem(newItem);
 
   newItem = new LCDMenuItem(F("Set Brightness"));

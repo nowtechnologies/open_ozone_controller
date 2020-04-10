@@ -69,7 +69,7 @@
 		Storage::writeByte(state?1:0, ROM_LOCK);
 	};
 
-	void Storage::storeEchoState(bool state){
+	void Storage::storeLogState(bool state){
 		Storage::writeByte(state?1:0, ROM_ECHO);
 	};
 
@@ -108,7 +108,7 @@
 		return bool(value);
 	};
 
-	bool Storage::serialEchoEnabled(){
+	bool Storage::serialLogEnabled(){
 		uint8_t value = Storage::readByte(ROM_ECHO);
 		return bool(value);
 	};
@@ -132,7 +132,7 @@
 		Storage::storeDeconTime(15); // min
 		Storage::storeKillLevel(25); // ppm
 		Storage::storeControlThreshold(5); // ppm
-		Storage::storeEchoState(true);
+		Storage::storeLogState(true);
 		Storage::storeLockInstalled(false);
 		Storage::storeChamberVolume(100); // liter
 		Storage::storeGeneratorCapacity(5000); // mg/h
