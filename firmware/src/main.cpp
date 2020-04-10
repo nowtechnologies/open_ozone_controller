@@ -1,7 +1,3 @@
-// hard coded definitions
-#include "version.h"
-#include "pinMap.h"
-
 // Libraries
 #include <Arduino.h>
 #include <LiquidCrystal.h>
@@ -12,10 +8,19 @@
 #include <MCP335X.h>
 #include <MQ131.h>
 
+// hard coded definitions
+#include "version.h"
+#include "pinMap.h"
+#include "packets.h"
+
 // Globals
 bool SPIozoneSensorPresent    = false;
 bool SPIhumiditySensorPresent = false; // probably going to be a BMP280
-
+bool ozoneMonitorConnected    = false;
+UARTHEADER packetHeader;
+SENSORPACK sensorPacket;
+GPIOS      internal;
+LOG        logData;
 MCP335X adc(chipSelect2, spiMOSI, spiMISO, spiSCK);
 MQ131   ozoneSensor(MQ131Model::HighConcentration, &adc);
 LiquidCrystal* LCD;
@@ -48,9 +53,10 @@ bool     LogEnabled;
 uint16_t generatorCapacity;
 uint16_t chamberVolume;
 
-// Lazy headers
-#include "peripherals.h"
+// Lazy de-spaghetti headers
 #include "uartcomm.h"
+#include "wait.h"
+#include "peripherals.h"
 #include "buttonUtils.h"
 #include "displayUtils.h"
 #include "fwInfoAction.h"
@@ -137,4 +143,5 @@ void loop()
     if (buttonState != btnNONE) activeMenu->display();
     lastButton = buttonState;
   }
+  statusReport();
 }

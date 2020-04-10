@@ -3,12 +3,8 @@
 
 void testAction(int p)
 {
-  mainMenu->getLCD()->clear();
-  mainMenu->getLCD()->setCursor(0,0);
-  mainMenu->getLCD()->print(nameOfPeripherals[p]);
-  mainMenu->getLCD()->setCursor(0,1);
-  mainMenu->getLCD()->print(portEnabled[p]?"ON":"OFF");
-  delay(500);
+  displayInfo(nameOfPeripherals[p],portEnabled[p]?"ON":"OFF");
+  wait(500);
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
       buttonState = read_LCD_buttons();
@@ -26,8 +22,9 @@ void testAction(int p)
         lastButton = buttonState;
         clearSecondLcdRow();
         mainMenu->getLCD()->print(portEnabled[p]?"ON":"OFF");
-        digitalWrite(portPin[p], portEnabled[p]);
+        updatePorts();
       }
+    statusReport();
   }
 }
 

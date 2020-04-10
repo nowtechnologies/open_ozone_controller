@@ -6,6 +6,7 @@ float ozoneLevel(){
   }
   else if (ozoneMonitorConnected)
   {
+    checkIncomingSerial();
     return sensorPacket.ozonePPM; // requires buffer check
   }
   else return -1;
@@ -16,34 +17,34 @@ void ozoneDisplayAction()
   int buttonState = btnNONE;
   if (SPIozoneSensorPresent || ozoneMonitorConnected)
   {
-    mainMenu->getLCD()->clear();
-    mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print(F("Ozone level:"));
+    displayTopic(F("Ozone level:"));
     while (buttonState != btnLEFT) {
         buttonState = read_LCD_buttons();
+
         if (SPIozoneSensorPresent)
         {
           ozoneSensor.read();
-          clearSecondLcdRow();
-          mainMenu->getLCD()->print(ozoneSensor.getO3());
-          mainMenu->getLCD()->print(F(" ppm"));
-          delay(100);
+          if (millis()%100==0)
+          {
+            displayValue(ozoneSensor.getO3(),F("ppm"));
+          }
         }
         else if (ozoneMonitorConnected)
         {
           checkIncomingSerial();
-          clearSecondLcdRow();
-          mainMenu->getLCD()->print(sensorPacket.ozonePPM); // there are no threads !
-          mainMenu->getLCD()->print(F(" ppm / "));
-          mainMenu->getLCD()->print(int(sensorPacket.temperature));
-          mainMenu->getLCD()->print(F("C"));
-          delay(100);
+          if (millis()%100==0)
+          {
+            clearSecondLcdRow();
+            mainMenu->getLCD()->print(sensorPacket.ozonePPM);
+            mainMenu->getLCD()->print(F(" ppm / "));
+            mainMenu->getLCD()->print(int(sensorPacket.temperature));
+            mainMenu->getLCD()->print(F("C"));
+          }
         }
+        statusReport();
     }
   } else {
-    mainMenu->getLCD()->clear();
-    mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print(F("No Sensor"));
+    displayWarning(F("No Sensor"));
     holdUntilEscape();
   }
 }
@@ -53,33 +54,19 @@ void ozoneCalibrationAction()
   int buttonState = btnNONE;
   if (SPIozoneSensorPresent || ozoneMonitorConnected)
   {
-    mainMenu->getLCD()->clear();
-    mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print(F("Adjust baseline"));
+    displayTopic(F("Adjust baseline"));
     while (buttonState != btnLEFT) {
         buttonState = read_LCD_buttons();
-        if (SPIozoneSensorPresent)
+        if (millis()%100==0)
         {
-          ozoneSensor.read();
-          ozoneSensor.getO3();
           clearSecondLcdRow();
           mainMenu->getLCD()->print(F("Zero: "));
-          mainMenu->getLCD()->print(1.0-ozoneSensor.getRatio());
-          delay(100);
+          mainMenu->getLCD()->print(1.0-ozoneLevel());
         }
-        else if (ozoneMonitorConnected)
-        {
-          checkIncomingSerial();
-          clearSecondLcdRow();
-          mainMenu->getLCD()->print(F("Zero: "));
-          mainMenu->getLCD()->print(1.0-sensorPacket.ratio); // there are no threads !
-          delay(100);
-        }
+        statusReport();
     }
   } else {
-    mainMenu->getLCD()->clear();
-    mainMenu->getLCD()->setCursor(0,0);
-    mainMenu->getLCD()->print(F("No Sensor"));
+    displayWarning(F("No Sensor"));
     holdUntilEscape();
   }
 }

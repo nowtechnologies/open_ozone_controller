@@ -3,7 +3,7 @@
 
 // hardcoded firmware version
 #define fw_major  0
-#define fw_minor  3
-#define fw_fix    0
+#define fw_minor  5
+#define fw_fix    2
 
 #endif

@@ -6,11 +6,6 @@
 #include "packets.h"
 
 RingBuffer serialBuffer(UART_BUFFER_SIZE);
-UARTHEADER packetHeader;
-SENSORPACK sensorPacket;
-GPIOS      internal;
-LOG        logData;
-bool ozoneMonitorConnected = false;
 
 void process(const UARTHEADER &header, RingBuffer &buffer) {
 
@@ -104,8 +99,12 @@ void send(uint8_t pid, const void *data, size_t length) {
 void sendLog(){
   if (LogEnabled)
   {
-    logData.sensor = sensorPacket;
+    logData.sensor = sensorPacket; // TODO: add SPI sensor data
     logData.status = internal.state.value;
     send(PID_LOG, &logData, sizeof(LOG));
   }
+}
+
+void statusReport(){
+  if (millis()%100==0) sendLog();
 }

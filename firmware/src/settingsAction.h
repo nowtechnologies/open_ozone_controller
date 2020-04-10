@@ -5,7 +5,7 @@ int settingsAction(uint16_t value, uint8_t stepSize, uint16_t maxValue, String t
 {
   displayTopic(topic);
   displayValue(value, unit);
-  delay(500);
+  wait(500);
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
       buttonState = read_LCD_buttons();
@@ -24,13 +24,14 @@ int settingsAction(uint16_t value, uint8_t stepSize, uint16_t maxValue, String t
         case btnRIGHT :
           displaySaved();
           displayValue(value, unit);
-          delay(1000);
+          wait(1000);
           return value;
           break;
         }
         lastButton = buttonState;
         displayValue(value, unit);
       }
+      statusReport();
   }
   return -1;
 }
@@ -39,7 +40,7 @@ int choiceAction(bool choice, String topic)
 {
   displayTopic(topic);
   displayChoice(choice);
-  delay(500);
+  wait(500);
   int buttonState = btnNONE;
   while (buttonState != btnLEFT) {
       buttonState = read_LCD_buttons();
@@ -56,13 +57,14 @@ int choiceAction(bool choice, String topic)
         case btnRIGHT :
           displaySaved();
           displayChoice(choice);
-          delay(1000);
+          wait(1000);
           return choice;
           break;
         }
         lastButton = buttonState;
         displayChoice(choice);
       }
+      statusReport();
   }
   return -1;
 }

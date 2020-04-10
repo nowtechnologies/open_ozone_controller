@@ -22,7 +22,7 @@ void initMenus(){
   newItem->setAction(&processAction);
   mainMenu->addMenuItem(newItem);
 
-  newItem = new LCDMenuItem(F("Configure"));
+  newItem = new LCDMenuItem(F("Configuration"));
   newItem->setAction(&settingsAction);
   mainMenu->addMenuItem(newItem);
 
@@ -30,13 +30,9 @@ void initMenus(){
   newItem->setAction(&ozoneDisplayAction);
   mainMenu->addMenuItem(newItem);
 
-  // newItem = new LCDMenuItem("Humidity level");
-  // newItem->setAction(&humidityAction);
-  // mainMenu->addMenuItem(newItem);
-
-  // newItem = new LCDMenuItem("Set timer");
-  // newItem->setAction(&timerAction);
-  // mainMenu->addMenuItem(newItem);
+  newItem = new LCDMenuItem(F("Start timer"));
+  newItem->setAction(&timerAction);
+  mainMenu->addMenuItem(newItem);
 
   // Settings Menu, whose parent menu is mainMenu
   settingsMenu = new LCDMenu(F("Settings Menu"), LCD, mainMenu);

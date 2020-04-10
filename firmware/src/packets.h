@@ -19,8 +19,6 @@
 #define __PACKED __attribute__((packed))
 #endif
 
-// UART HEADER
-// NOTE: UHR header; header.flags.bits.ack = 1; header.flags.value = 0b00000001;
 typedef struct {
 	uint8_t  firstLeadIn;
 	uint8_t  lastLeadIn;

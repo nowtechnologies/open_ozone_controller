@@ -5,7 +5,9 @@ void updatePorts()
 {
   for (uint8_t p=0; p<5; p++){
     digitalWrite(portPin[p], portEnabled[p]);
+    bitWrite(internal.state.value, p, portEnabled[p]);
   }
+  sendLog();
 }
 
 void shutDownPeripherals(){
