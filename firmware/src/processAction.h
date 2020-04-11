@@ -60,10 +60,12 @@ void processAction()
         {
           portEnabled[generator] = true;
           updatePorts();
-          delay(generatorPulseLength()/5); // short generator burst
+          // WARNING: some power supplies have a minimum up-time
+          delay(generatorPulseLength()/10); // short generator burst
           portEnabled[generator] = false; //  forbid further generation
           updatePorts();
-          restTimer.set(generatorPulseLength()*5); // wait for the sensor
+          // WARNING: time multiplier should depend on fan capacity
+          restTimer.set(generatorPulseLength()*15); // wait for the sensor
           genAllowed = false;
         }
 
