@@ -24,6 +24,7 @@ void testAction(int p)
         mainMenu->getLCD()->print(portEnabled[p]?"ON":"OFF");
         updatePorts();
       }
+    checkIncomingSerial(); 
     statusReport();
   }
 }
