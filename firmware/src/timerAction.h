@@ -2,10 +2,10 @@ uint32_t lastTime = 0;
 
 void timerAction(){
   int buttonState = btnNONE;
-  uint16_t timerSeconds = 10;
+  uint16_t timedMillis = 0;
   boolean timerStarted  = false;
   displayTopic(F("Start timer: "));
-  displayValue(timerSeconds,F("sec"));
+  displayValue(timedMillis,F("ms"));
   shutDownPeripherals();
 
   while (buttonState != btnLEFT) {
@@ -16,15 +16,15 @@ void timerAction(){
         switch (buttonState)
         {
         case btnDOWN :
-            timerSeconds--;
-            if (timerSeconds < 0) timerSeconds = 0;
+            timedMillis-=100;
+            if (timedMillis < 0) timedMillis = 0;
         break;
         case btnUP :
-            timerSeconds++;
-            if (timerSeconds > 65535) timerSeconds = 65535;
+            timedMillis+=100;
+            if (timedMillis > 65500) timedMillis = 65500;
         break;
         case btnRIGHT :
-            timer.set(timerSeconds*1000);
+            timer.set(timedMillis);
             timerStarted = true;
             displayTopic(F("Time left:"));
             portEnabled[generator] = true;
@@ -33,16 +33,14 @@ void timerAction(){
         break;
         }
         lastButton = buttonState;
-        displayValue(timerSeconds,F("sec"));
+        displayValue(timedMillis,F("ms"));
       }
 
       if (timerStarted)
       {
-        uint32_t remaining = round(timer.TimeRemaining()/1000);
-        if (!timer.poll() && lastTime != remaining)
+        if (millis()%100==0)
         {
-          displayValue(remaining,F("sec"));
-          lastTime = remaining;
+          displayValue(timer.TimeRemaining(),F("ms"));
         }
         if (timer.poll()) {
           portEnabled[generator] = false;
