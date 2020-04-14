@@ -6,7 +6,10 @@ void timerAction(){
   boolean timerStarted  = false;
   displayTopic(F("Start timer: "));
   displayValue(timedMillis,F("ms"));
-  shutDownPeripherals();
+  portEnabled[generator]  = false;
+  portEnabled[decomposer] = false;
+  portEnabled[blower]     = true;
+  updatePorts();
 
   while (buttonState != btnLEFT) {
 
@@ -28,7 +31,7 @@ void timerAction(){
             timerStarted = true;
             displayTopic(F("Time left:"));
             portEnabled[generator] = true;
-            portEnabled[blower] = true;
+            portEnabled[blower]    = true;
             updatePorts();
         break;
         }
@@ -44,12 +47,10 @@ void timerAction(){
         }
         if (timer.poll()) {
           portEnabled[generator] = false;
-          portEnabled[blower] = false;
           updatePorts();
           break;
         }
       }
 
   }
-  shutDownPeripherals(); // just to be on the safe side
 }

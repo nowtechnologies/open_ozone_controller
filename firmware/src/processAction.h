@@ -65,7 +65,7 @@ void processAction()
           portEnabled[generator] = false; //  forbid further generation
           updatePorts();
           // WARNING: time multiplier should depend on fan capacity
-          restTimer.set(generatorPulseLength()*15); // wait for the sensor
+          restTimer.set(generatorRestTime*1000); // wait for the sensor
           genAllowed = false;
         }
 

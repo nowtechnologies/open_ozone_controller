@@ -1,7 +1,7 @@
 #ifndef __STORAGE_H__
 #define __STORAGE_H__
 
-#define STORAGE_REVISION 6
+#define STORAGE_REVISION 7
 
 	#include "Arduino.h"
 	#include "EEPROM.h"
@@ -18,6 +18,7 @@
 	#define ROM_ECHO			37
 	#define ROM_GENCAP		38
 	#define ROM_CHAMVOL		40
+	#define ROM_REST			42
 
 	// lib
 	#define ROM_REV1 			62
@@ -40,12 +41,14 @@
 		void storeLogState(bool thisBool);
 		void storeGeneratorCapacity(int thisValue);
 		void storeChamberVolume(int thisValue);
+		void storeRestTime(uint8_t);
 
 		// load
 		uint8_t brightness();
 		uint8_t killLevel();
 		uint8_t deconTime();
 		uint8_t	controlThreshold();
+		uint8_t	restTime();
 		int			generatorCapacity();
 		int 		chamberVolume();
 		bool		lockInstalled();

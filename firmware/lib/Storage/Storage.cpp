@@ -65,6 +65,10 @@
 		Storage::writeByte(thisByte, ROM_THRESH);
 	};
 
+	void Storage::storeRestTime(uint8_t thisByte){
+		Storage::writeByte(thisByte, ROM_REST);
+	};
+
 	void Storage::storeLockInstalled(bool state){
 		Storage::writeByte(state?1:0, ROM_LOCK);
 	};
@@ -103,6 +107,11 @@
 		return value;
 	};
 
+	uint8_t Storage::restTime(){
+		uint8_t value = Storage::readByte(ROM_REST);
+		return value;
+	};
+
 	bool Storage::lockInstalled(){
 		uint8_t value = Storage::readByte(ROM_LOCK);
 		return bool(value);
@@ -132,6 +141,7 @@
 		Storage::storeDeconTime(15); // min
 		Storage::storeKillLevel(25); // ppm
 		Storage::storeControlThreshold(5); // ppm
+		Storage::storeRestTime(15); // sec
 		Storage::storeLogState(true);
 		Storage::storeLockInstalled(false);
 		Storage::storeChamberVolume(100); // liter

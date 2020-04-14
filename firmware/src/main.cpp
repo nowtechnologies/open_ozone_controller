@@ -48,6 +48,7 @@ uint8_t  deconTime;
 uint8_t  killLevel;
 uint8_t  lcdBrightness;
 uint8_t  ctrlThreshold;
+uint8_t  generatorRestTime;
 bool     lockInstalled;
 bool     LogEnabled;
 uint16_t generatorCapacity;
@@ -89,7 +90,7 @@ void setup()
   LogEnabled   = config.serialLogEnabled();
   chamberVolume = config.chamberVolume();
   generatorCapacity = config.generatorCapacity();
-
+  generatorRestTime = config.restTime();
   // Display
   lcdBrightness = config.brightness();
   LCD = new LiquidCrystal(lcdResetPin, lcdEnablePin, lcdData4Pin, lcdData5Pin, lcdData6Pin, lcdData7Pin);

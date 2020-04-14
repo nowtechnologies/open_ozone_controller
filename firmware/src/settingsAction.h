@@ -114,6 +114,15 @@ void controlThresholdAction()
   }
 }
 
+void restTimeAction()
+{
+  int v = settingsAction(generatorRestTime, 1, 255, F("Rest time:"), F("sec"));
+  if (v>0) {
+    generatorRestTime = v;
+    config.storeRestTime(generatorRestTime);
+  }
+}
+
 void brightnessAction()
 {
   int v = settingsAction(lcdBrightness, 1, 255, F("LCD brightness:"), F("pwm"));

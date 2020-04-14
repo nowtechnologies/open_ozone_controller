@@ -49,6 +49,10 @@ void initMenus(){
   newItem->setAction(&generatorCapacityAction);
   settingsMenu->addMenuItem(newItem);
 
+  newItem = new LCDMenuItem(F("Set Rest Time"));
+  newItem->setAction(&restTimeAction);
+  settingsMenu->addMenuItem(newItem);
+
   newItem = new LCDMenuItem(F("Set Kill Level"));
   newItem->setAction(&killLevelAction);
   settingsMenu->addMenuItem(newItem);
