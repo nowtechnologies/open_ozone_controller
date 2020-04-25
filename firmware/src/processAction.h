@@ -21,6 +21,9 @@ void processAction()
     wait(200);
     if (waitForButtonPress() == btnRIGHT){ // yes !!!
 
+      // clear port states and disable all peripherals
+      shutDownPeripherals();
+
       // LOCKING DOOR
       if (lockInstalled){
         displayInfo(F("Locking door..."));
@@ -28,9 +31,6 @@ void processAction()
         wait(2000); // e.g.
         updatePorts();
       }
-
-      // clear port states and disable all peripherals
-      shutDownPeripherals();
 
       // FLOODING CHAMBER WITH OZONE GAS
       displayInfo(F("Flooding chamber"),F("with ozone..."));
@@ -118,7 +118,9 @@ void processAction()
       }
 
     } // eof selected yes
-    else { } // user said no, nothing to do
+    else { // user said no
+      shutDownPeripherals();
+    }
   } // eof no error
 }// eof process
 
