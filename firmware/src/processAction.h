@@ -14,11 +14,6 @@ void processAction()
     displayWarning(F("Sensor Failure"));
     holdUntilEscape();
   }
-  else if (!ozoneMonitorConnected && !SPIozoneSensorPresent)
-  {
-    displayWarning(F("No sensors"));
-    holdUntilEscape();
-  }
   // if there is an ozone sensor ask for confirmation
   else
   {
@@ -106,7 +101,7 @@ void processAction()
           mainMenu->getLCD()->print(F("PPM: "));
           mainMenu->getLCD()->print(ozoneLevel());
         }
-        if (ozoneLevel()<=9.0) break; // <-- WARNING: THIS SHOULD BE 3.0 !!!
+        if (ozoneLevel()<=3.0) break; // MAC 3.0 ppm for 15 mins
         // IN ORDER TO MAKE THIS SAFE, WE NEED A MORE PRECISE SENSOR
         statusReport();
       }

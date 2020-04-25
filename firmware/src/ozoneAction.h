@@ -1,41 +1,22 @@
 float ozoneLevel(){
-  if (SPIozoneSensorPresent)
-  {
-    ozoneSensor.read();
-    return ozoneSensor.getO3();
-  }
-  else if (ozoneMonitorConnected)
-  {
-    checkIncomingSerial();
-    return sensorPacket.ozonePPM; // requires buffer check
-  }
-  else return -1;
+  return sensorPacket.ozonePPM;
 }
 
 void ozoneDisplayAction()
 {
   int buttonState = btnNONE;
-  if (SPIozoneSensorPresent || ozoneMonitorConnected)
+  if (ozoneMonitorConnected)
   {
     displayTopic(F("Ozone level:"));
     while (buttonState != btnLEFT) {
         buttonState = read_LCD_buttons();
-
-        if (SPIozoneSensorPresent)
-        {
-          ozoneSensor.read();
-          if (millis()%100==0)
-          {
-            displayValue(ozoneSensor.getO3(),F("ppm"));
-          }
-        }
-        else if (ozoneMonitorConnected)
+        if (ozoneMonitorConnected)
         {
           checkIncomingSerial();
           if (millis()%100==0)
           {
             clearSecondLcdRow();
-            mainMenu->getLCD()->print(sensorPacket.ozonePPM);
+            mainMenu->getLCD()->print(ozoneLevel());
             mainMenu->getLCD()->print(F(" ppm / "));
             mainMenu->getLCD()->print(int(sensorPacket.temperature));
             mainMenu->getLCD()->print(F("C"));
@@ -52,7 +33,7 @@ void ozoneDisplayAction()
 void ozoneCalibrationAction()
 {
   int buttonState = btnNONE;
-  if (SPIozoneSensorPresent || ozoneMonitorConnected)
+  if (ozoneMonitorConnected)
   {
     displayTopic(F("Adjust baseline"));
     while (buttonState != btnLEFT) {
