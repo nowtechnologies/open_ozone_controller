@@ -9,9 +9,9 @@ void processAction()
   int buttonState = btnNONE;
 
   // check wheter we can start the process
-  if (ozoneMonitorConnected && int(sensorPacket.temperature)==0)
+  if (!ozoneMonitorConnected)
   {
-    displayWarning(F("Sensor Failure"));
+    displayWarning(F("No Sensor"));
     holdUntilEscape();
   }
   // if there is an ozone sensor ask for confirmation
